@@ -3,6 +3,10 @@ public class SimpleTask extends AbstractTask {
         super(name, description, taskId);
     }
 
+    public SimpleTask(String name, String description, int id, TaskStatus status) {
+        super(name, description, id);
+        super.setStatus(status);
+    }
 
 
     public static final class PreSimpleTask {

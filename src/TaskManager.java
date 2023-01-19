@@ -55,12 +55,12 @@ public class TaskManager {
         return new ArrayList<>(tasks.values());
     }
 
-    public AbstractTask getAnyTaskById(int taskId) {
+    public AbstractTask getTaskById(int taskId) {
         return tasks.get(taskId);
     }
 
 
-    public List<SimpleTask> getSimpleTaskList(){
+    public List<SimpleTask> getSimpleTaskList() {
         return (List<SimpleTask>) getTasksListByType(SimpleTask.class);
     }
 
@@ -103,26 +103,36 @@ public class TaskManager {
     public void deleteAllTasks() {
         tasks.clear();
     }
-    
-   public void deleteTaskById(int taskId) { //TODO надо ли провeрять существование id?
+
+    public void deleteTaskById(int taskId) { //TODO надо ли провeрять существование id?
         if (tasks.get(taskId).getClass() == EpicTask.class) {
             for (SubTask subTask : getSubTaskListById(taskId)) {
                 tasks.remove(subTask.getId());
             }
         }
         tasks.remove(taskId);
-   }
+    }
 
-   //Update task
+    //Update task
 
-   public void updateTask(AbstractTask taskWithIOldId) {
-        tasks.put(taskWithIOldId.getId(), taskWithIOldId);
+    public void updateTask(AbstractTask oldTask, TaskStatus newStatus) {
+        System.out.println(oldTask.getClass() + "\t" + oldTask);
+        if (oldTask.getClass() == SimpleTask.class) {
+            SimpleTask task = new SimpleTask(oldTask.getName(),
+                    oldTask.getDescription(),
+                    oldTask.getId(),
+                    newStatus);
+            tasks.put(task.getId(), task);
+            System.out.println(task.getClass() + "\t" + task);
+        } else {
+            System.out.println("Что-то пошло не так!");
+        }
     }
 
     //Additional methods
 
 
-    private void keepOrCalculateTaskStatus(){
+    private void keepOrCalculateTaskStatus() {
 //        Фраза «информация приходит вместе с информацией по задаче» означает, что не существует отдельного метода,
 //        который занимался бы только обновлением статуса задачи.
 //        Вместо этого статус задачи обновляется вместе с полным обновлением задачи.
@@ -141,7 +151,7 @@ public class TaskManager {
     static final class TaskIdGenerator {
         private static int id = 0;
 
-        int getNextFreeId(){
+        int getNextFreeId() {
             return ++id;
         }
     }

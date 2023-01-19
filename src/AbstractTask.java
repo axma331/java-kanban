@@ -30,8 +30,8 @@ public abstract class AbstractTask {
    }
 
 
-   public AbstractTask setStatus(TaskStatus status) {
-      return  null;
+   public void setStatus(TaskStatus status) {
+      this.status = status;
    }
 
    @Override

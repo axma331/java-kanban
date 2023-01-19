@@ -35,31 +35,34 @@ public class Main {
         manager.deleteTaskById(manager.getEpicTaskList().get(1).getId());//todo проверить получение удаленной задачи
         System.out.println(manager);
 
-//        System.out.println("Part 4:");
+        System.out.println("Part 4:");
 //        AbstractTask taskById = manager.getAnyTaskById(3).setStatus(TaskStatus.IN_PROGRESS);
-//        System.out.println(taskById);
-//        manager.updateTask(taskById);
+        AbstractTask taskById = manager.getTaskById(1);
+        System.out.println(taskById.getClass() + "   " + taskById);
+        manager.updateTask(taskById, TaskStatus.IN_PROGRESS);
+//        AbstractTask newTaskById = manager.getTaskById(1);
+        System.out.println(taskById.getClass() + "   " + taskById);
+        System.out.println(manager);
+
+//        System.out.println("Part 5:");
+//        SimpleTask.PreSimpleTask task2 = new SimpleTask.PreSimpleTask("simple_task_2", "simple_description_2");
+//        SimpleTask.PreSimpleTask task3 = new SimpleTask.PreSimpleTask("simple_task_3", "simple_description_3");
+//        EpicTask.PreEpicTask eTask2 = new EpicTask.PreEpicTask("epic_task_2", "epic_description_2");
+//        manager.addTask(task2);
+//        manager.addTask(task3);
+//        manager.addTask(eTask2);
+//        SubTask.PreSubTask sTask4 = new SubTask.PreSubTask("sub_task_4", "sub_description_4",
+//                manager.getEpicTaskList().get(manager.getEpicTaskList().size() - 1).getId());
+//        manager.addTask(sTask4);
 //        System.out.println(manager);
-
-        System.out.println("Part 5:");
-        SimpleTask.PreSimpleTask task2 = new SimpleTask.PreSimpleTask("simple_task_2", "simple_description_2");
-        SimpleTask.PreSimpleTask task3 = new SimpleTask.PreSimpleTask("simple_task_3", "simple_description_3");
-        EpicTask.PreEpicTask eTask2 = new EpicTask.PreEpicTask("epic_task_2", "epic_description_2");
-        manager.addTask(task2);
-        manager.addTask(task3);
-        manager.addTask(eTask2);
-        SubTask.PreSubTask sTask4 = new SubTask.PreSubTask("sub_task_4", "sub_description_4",
-                manager.getEpicTaskList().get(manager.getEpicTaskList().size() - 1).getId());
-        manager.addTask(sTask4);
-        System.out.println(manager);
-        System.out.println("AllTaskList:\n" + manager.getAllTaskList());
-        int radId = manager.getIdOfAllTasks().size() / 2;
-        System.out.println("getAnyTaskById: "+ manager.getAnyTaskById(manager.getIdOfAllTasks().get(radId)));
-
-        System.out.println("Part 6:");
-
-        manager.deleteAllTasks();
-        System.out.println(manager);
+//        System.out.println("AllTaskList:\n" + manager.getAllTaskList());
+//        int radId = manager.getIdOfAllTasks().size() / 2;
+//        System.out.println("getAnyTaskById: "+ manager.getTaskById(manager.getIdOfAllTasks().get(radId)));
+//
+//        System.out.println("Part 6:");
+//
+//        manager.deleteAllTasks();
+//        System.out.println(manager);
 
 //        SimpleTask.PreSimpleTask task1 = new SimpleTask.PreSimpleTask("simple_task1_1", "simple_description1_1");
 //
