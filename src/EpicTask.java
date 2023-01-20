@@ -9,7 +9,16 @@ public class EpicTask extends AbstractTask {
         this.subTasks = subTasks;
     }
 
-    void updateTaskStatus() {} //Завершение всех подзадач эпика считается завершением эпика.
+    public EpicTask(String name, String description, int taskId, List<Integer> subTasks, TaskStatus status) {
+        super(name, description, taskId);
+        this.subTasks = subTasks;
+        this.setStatus(status);
+    }
+
+    public List<Integer> getSubTasks() {
+        return subTasks;
+    }
+
     public static final class PreEpicTask {
         private String name;
         private String description;
@@ -38,7 +47,7 @@ public class EpicTask extends AbstractTask {
 
 
     @Override
-    public String toString() { //TODO использовать super.toString()
+    public String toString() {
         return this.getClass().getSimpleName() +
                 "id=" + getId() +
                 ", name='" + getName() +

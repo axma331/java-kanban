@@ -6,6 +6,12 @@ public class SubTask extends AbstractTask {
         this.epicId = epicId;
     }
 
+    public SubTask(String name, String description, int taskId, int epicId, TaskStatus status) {
+        super(name, description, taskId);
+        this.epicId = epicId;
+        this.setStatus(status);
+    }
+
     public int getEpicId() {
         return epicId;
     }
@@ -32,6 +38,8 @@ public class SubTask extends AbstractTask {
         public int getEpicId() {
             return epicId;
         }
+
+
 
         @Override
         public String toString() {

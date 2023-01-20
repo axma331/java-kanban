@@ -5,7 +5,7 @@ public class SimpleTask extends AbstractTask {
 
     public SimpleTask(String name, String description, int id, TaskStatus status) {
         super(name, description, id);
-        super.setStatus(status);
+        this.setStatus(status);
     }
 
 
