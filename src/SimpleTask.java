@@ -8,7 +8,6 @@ public class SimpleTask extends AbstractTask {
         this.setStatus(status);
     }
 
-
     public static final class PreSimpleTask {
         private String name;
         private String description;

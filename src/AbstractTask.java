@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public abstract class AbstractTask {
    private String name;
    private String description;
@@ -32,6 +34,22 @@ public abstract class AbstractTask {
 
    public void setStatus(TaskStatus status) {
       this.status = status;
+   }
+
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+      AbstractTask other = (AbstractTask) o;
+      return id == other.id && Objects.equals(name, other.name) && Objects.equals(description, other.description)
+              && status == other.status;
+   }
+
+   @Override
+   public int hashCode() { //todo надо ли тут производить доумножение отдельно хеш-кода кажорого поля на 31, если
+         // и в метоже  hash  идет реализация "result = 31 * result + (element == null ? 0 : element.hashCode())"
+      // И надо ли преопределять в дочерних классах хашкод, если они не отличаются по полям от родителя?
+      return Objects.hash(name, description, id, status);
    }
 
    @Override

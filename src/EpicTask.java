@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class EpicTask extends AbstractTask {
     private List<Integer> subTasks;
@@ -17,6 +18,31 @@ public class EpicTask extends AbstractTask {
 
     public List<Integer> getSubTasks() {
         return subTasks;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        EpicTask epicTask = (EpicTask) o;
+        return Objects.equals(subTasks, epicTask.subTasks);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), subTasks);
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() +
+                "id=" + getId() +
+                ", name='" + getName() +
+                ", description='" + getDescription().length() +
+                ", status=" + getStatus() +
+                ", subtasks=" + subTasks +
+                '\n';
     }
 
     public static final class PreEpicTask {
@@ -43,17 +69,5 @@ public class EpicTask extends AbstractTask {
                     ", description='" + description + '\'' +
                     '}';
         }
-    }
-
-
-    @Override
-    public String toString() {
-        return this.getClass().getSimpleName() +
-                "id=" + getId() +
-                ", name='" + getName() +
-                ", description='" + getDescription().length() +
-                ", status=" + getStatus() +
-                ", subtasks=" + subTasks +
-                '\n';
     }
 }
