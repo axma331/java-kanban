@@ -128,8 +128,14 @@ public class TaskManager {
 
     //Update task
 
-    public void updateTask(AbstractTask oldTask, TaskStatus newStatus) { //todo Согласен, что надо декомпозировать данный метод,
-        // но пока не пришло понимание как это лучше не пришло понимание как это лучше сделать,и да есть дублирование кода :(
+    public void updateTask(AbstractTask oldTask, TaskStatus newStatus) {
+            //todo Согласен, что надо декомпозировать данный метод,
+            // но пока не пришло понимание как это лучше не пришло понимание как это лучше сделать,и да есть дублирование кода :(
+            // Честно говоря мне не очень нравиться как я сделал в данном методе т.к. я создал дополнительный конструктор
+            // для каждого класса, когда, как мне кажется, правильнее было бы использовать тот что есть и просто дописать сетеры
+            // на недостающие параметры. Что скажете? И так же я использовал абстрактный класс для обобщение методов (один для нескольких классов),
+            // но что-то не очень хорошо у меня это получилось. Теперь я понял, что можно было просто сделать просто sybtask и epic,
+            // которые наследуются от task, который сам является simpletask-ом.
         if (SimpleTask.class == oldTask.getClass()) {
             SimpleTask task = new SimpleTask(oldTask.getName(),
                     oldTask.getDescription(),
@@ -148,7 +154,7 @@ public class TaskManager {
             System.out.println("You changed " + task.getClass().getSimpleName() + "s " +
                     "status from " + oldTask.getStatus() + " to " + newStatus);
             //todo rогда меняется статус любой подзадачи в эпике, нам необходимо актуализировать статус,
-            //конечно при демпозиции код был бы более лаконичным, но понимание об этом пришло только сейчас,а пока так
+            // конечно при демпозиции код был бы более лаконичным, но понимание об этом пришло только сейчас,а пока так
             updateTask(tasks.get(task.getEpicId()), null);
         } else if (EpicTask.class == oldTask.getClass()) {
             int numberOfSubtasks = ((EpicTask) oldTask).getSubTasks().size();
@@ -162,6 +168,9 @@ public class TaskManager {
                     updateEpicTaskStatus(oldTask, TaskStatus.IN_PROGRESS);
                     return;
                 }
+            }
+            if (count != 0) {
+                updateEpicTaskStatus(oldTask, TaskStatus.IN_PROGRESS);
             }
             System.out.println("The status " + oldTask.getStatus() + " of " + oldTask.getClass().getSimpleName() + "s " +
                     " remained unchanged.");

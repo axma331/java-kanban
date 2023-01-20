@@ -12,11 +12,11 @@ public class Main {
         manager.addTask(eTask);
         manager.addTask(task1);
         manager.addTask(eTask1);
-//        System.out.println("SimpleTaskList:\n" + manager.getSimpleTaskList());
-//        System.out.println("EpicTaskList:\n" + manager.getEpicTaskList());
-//        System.out.println(manager);
-//
-//        System.out.println("Part 2:");
+        System.out.println("SimpleTaskList:\n" + manager.getSimpleTaskList());
+        System.out.println("EpicTaskList:\n" + manager.getEpicTaskList());
+        System.out.println(manager);
+
+        System.out.println("Part 2:");
         SubTask.PreSubTask sTask = new SubTask.PreSubTask("sub_task_1", "sub_description_1",
                 manager.getEpicTaskList().get(0).getId());
         SubTask.PreSubTask sTask2 = new SubTask.PreSubTask("sub_task_2", "sub_description_2",
@@ -26,14 +26,14 @@ public class Main {
         manager.addTask(sTask);
         manager.addTask(sTask2);
         manager.addTask(sTask3);
-//        System.out.println("AllSubTaskList:\n" + manager.getSubTaskList());
-//        System.out.println("SubTaskList:\n" + manager.getSubTaskListById(manager.getEpicTaskList().get(1).getId()));
-//        System.out.println("SubTaskList:\n" + manager.getSubTaskListById(manager.getEpicTaskList().get(0).getId()));
-//        System.out.println(manager);
+        System.out.println("AllSubTaskList:\n" + manager.getAllSubTaskList());
+        System.out.println("SubTaskList:\n" + manager.getSubTaskListByEpicId(manager.getEpicTaskList().get(1).getId()));
+        System.out.println("SubTaskList:\n" + manager.getSubTaskListByEpicId(manager.getEpicTaskList().get(0).getId()));
+        System.out.println(manager);
 
-//        System.out.println("Part 3:");
+        System.out.println("Part 3:");
         manager.deleteTaskById(manager.getEpicTaskList().get(1).getId());//todo проверить получение удаленной задачи
-//        System.out.println(manager);
+        System.out.println(manager);
 
         System.out.println("Part 4:");
 
@@ -50,13 +50,12 @@ public class Main {
         manager.addTask(sTask6);
 
 
-//        AbstractTask taskById = manager.getAnyTaskById(3).setStatus(TaskStatus.IN_PROGRESS);
         AbstractTask taskById = manager.getTaskById(3);
-//        System.out.println(taskById.getClass() + "   " + taskById);
+        System.out.println(taskById.getClass() + "   " + taskById);
         manager.updateTask(taskById, TaskStatus.IN_PROGRESS);
-//        System.out.println(taskById.getClass() + "   " + taskById);
+        System.out.println(taskById.getClass() + "   " + taskById);
         AbstractTask newTaskById = manager.getTaskById(3);
-//        System.out.println(newTaskById.getClass() + "   " + newTaskById);
+        System.out.println(newTaskById.getClass() + "   " + newTaskById);
         System.out.println(manager);
         System.out.println(manager.getEpicTaskList());
         System.out.println(manager.getSubTaskListByEpicId(2));
@@ -73,15 +72,24 @@ public class Main {
         manager.addTask(task2);
         manager.addTask(task3);
         manager.addTask(eTask2);
+        manager.addTask(eTask3);
         SubTask.PreSubTask sTask7 = new SubTask.PreSubTask("sub_task_7", "sub_description_7",
                 manager.getEpicTaskList().get(manager.getEpicTaskList().size() - 1).getId());
         manager.addTask(sTask4);
+        manager.addTask(sTask7);
         System.out.println(manager);
         System.out.println("AllTaskList:\n" + manager.getAllTaskList());
         int radId = manager.getIdOfAllTasks().size() / 2;
         System.out.println("getAnyTaskById: "+ manager.getTaskById(manager.getIdOfAllTasks().get(radId)));
 
         System.out.println("Part 6:");
+        SubTask.PreSubTask sTask8 = new SubTask.PreSubTask("sub_task_8", "sub_description_8",
+                15);
+        manager.addTask(sTask8);
+        manager.updateTask(manager.getTaskById(17), TaskStatus.DONE);
+        System.out.println(manager);
+
+        System.out.println("Part 7:");
 
         manager.deleteTaskById(33);
         System.out.println(manager.getTaskById(33));
