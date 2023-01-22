@@ -159,7 +159,7 @@ public class TaskManager {
                     "status from " + oldTask.getStatus() + " to " + newStatus);
             checkStatusOfEpic(epics.get(subtask.getEpicId()));
         } else if (Epic.class == oldTask.getClass()) {
-            //
+            checkStatusOfEpic((Epic) oldTask);
         }
     }
 
