@@ -1,6 +1,13 @@
+package managers;
+
+import model.Epic;
+import model.Subtask;
+import model.Task;
+import model.TaskStatus;
+
 import java.util.*;
 
-interface TaskManager {
+public interface TaskManager {
 
 
     void addTask(Task preTask);

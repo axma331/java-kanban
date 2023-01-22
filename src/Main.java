@@ -1,3 +1,6 @@
+import managers.InMemoryTaskManager;
+import model.*;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -19,9 +22,9 @@ public class Main {
         manager.addTask(sTask2);
         manager.addTask(sTask3);
         System.out.println("All tasks: '\n" + manager.getAllTaskList() + '\n');
-        System.out.println("Task list:\n" + manager.getTaskList());
-        System.out.println("Epic list:\n" + manager.getEpicList());
-        System.out.println("Subtask list:\n" + manager.getSubtaskList());
+        System.out.println("model.Task list:\n" + manager.getTaskList());
+        System.out.println("model.Epic list:\n" + manager.getEpicList());
+        System.out.println("model.Subtask list:\n" + manager.getSubtaskList());
         System.out.println(manager);
         System.out.println(manager.getIdOfAllTasks());
 
@@ -104,6 +107,9 @@ public class Main {
         taskById = manager.getTaskById(radId);
         taskById = manager.getTaskById(16);
         taskById = manager.getTaskById(16);
+        taskById = manager.getTaskById(13);
+        taskById = manager.getTaskById(radId);
+
 
 
         System.out.println(manager.getHistory());

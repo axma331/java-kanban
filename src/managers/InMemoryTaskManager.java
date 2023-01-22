@@ -1,3 +1,10 @@
+package managers;
+
+import model.Epic;
+import model.Subtask;
+import model.Task;
+import model.TaskStatus;
+
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -27,7 +34,7 @@ public class InMemoryTaskManager implements TaskManager {
     //Add task
 
     /**
-     * Добавление новой задачи в менеджер. При добавление Subtask происходит обновление списка подзадач в Epic.
+     * Добавление новой задачи в менеджер. При добавление model.Subtask происходит обновление списка подзадач в model.Epic.
      *
      * @param preTask задача предварительно созданная для добавления в менеджер.
      */
@@ -53,7 +60,7 @@ public class InMemoryTaskManager implements TaskManager {
             updatedTask.addSubTasks(getSubTaskIdListByEpicId(epicId));
             epics.put(task.getId(), updatedTask);
         } else {
-            System.out.println("Epic c id №" + epicId + " не существует. Привязка невозможна!");
+            System.out.println("model.Epic c id №" + epicId + " не существует. Привязка невозможна!");
         }
     }
 
@@ -78,7 +85,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task getTaskById(int taskId) { //todo надо ли информировать пользователя об отсутствии задачи или выбрасывать искл. во избежании NullPointerExp.?
+    public Task getTaskById(int taskId) {
         Task task = null;
         if (tasks.containsKey(taskId)) {
             task = tasks.get(taskId);
@@ -130,7 +137,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     /**
-     * Удаление задачи с указанным идентификатором. Если задача является Epic, то так уже удаляется все его подзадачи.<br>
+     * Удаление задачи с указанным идентификатором. Если задача является model.Epic, то так уже удаляется все его подзадачи.<br>
      * В случае отсутствия указанного идентификатора, выводится предупреждение!
      *
      * @param id идентификатор задачи
