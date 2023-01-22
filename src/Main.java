@@ -1,7 +1,7 @@
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager manager = new TaskManager();
+        InMemoryTaskManager manager = new InMemoryTaskManager();
 
         System.out.println("Part 1:");
         Task task = new Task("simple_task_0", "simple_description_0");
@@ -24,6 +24,7 @@ public class Main {
         System.out.println("Subtask list:\n" + manager.getSubtaskList());
         System.out.println(manager);
         System.out.println(manager.getIdOfAllTasks());
+
 
 
         System.out.println("Part 2:");
@@ -93,6 +94,22 @@ public class Main {
         System.out.println(manager);
 
         System.out.println("Part 7:");
+        taskById = manager.getTaskById(radId);
+        taskById = manager.getTaskById(radId);
+        taskById = manager.getTaskById(radId);
+        taskById = manager.getTaskById(radId);
+        taskById = manager.getTaskById(radId);
+        taskById = manager.getTaskById(radId);
+        taskById = manager.getTaskById(radId);
+        taskById = manager.getTaskById(radId);
+        taskById = manager.getTaskById(16);
+        taskById = manager.getTaskById(16);
+
+
+        System.out.println(manager.getHistory());
+
+
+        System.out.println("Part 8:");
 
         manager.deleteTaskById(33);
         System.out.println(manager.getTaskById(33));
