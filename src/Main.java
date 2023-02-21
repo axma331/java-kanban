@@ -122,5 +122,33 @@ public class Main {
         manager.deleteAllTasks();
         System.out.println(manager);
 
+        System.out.println("Test for Strint № 5");
+        Epic eTask_51 = new Epic("epic_task_51", "epic_description_51");
+        manager.addTask(eTask_51);
+        Epic eTask_52 = new Epic("epic_task_52", "epic_description_52");
+        manager.addTask(eTask_52);
+        Subtask sTask52_1 = new Subtask("sub_task_52_1", "sub_description_52_1", eTask_52.getId());
+        Subtask sTask52_2 = new Subtask("sub_task_52_2", "sub_description_52_2", eTask_52.getId());
+        Subtask sTask52_3 = new Subtask("sub_task_52_3", "sub_description_52_3", eTask_52.getId());
+        manager.addTask(sTask52_1);
+        manager.addTask(sTask52_2);
+        manager.addTask(sTask52_3);
+        System.out.println("Get any tasks");
+        manager.getSubtaskList();
+        manager.getHistory();
+        manager.getEpicList();
+        manager.getHistory();
+        manager.getTaskById(sTask52_2.getId());
+        manager.getHistory();
+        System.out.println("Delete task from history");
+        manager.deleteTaskById(sTask52_1.getId());
+        manager.getHistory();
+        System.out.println("Delete Epic from history with his subtasks");
+        manager.deleteTaskById(eTask_52.getId());
+        manager.getHistory();
+        System.out.println("The end!");
+
+
+
     }
 }
