@@ -26,6 +26,8 @@ public class Main {
         System.out.println("model.Epic list:\n" + manager.getEpicList());
         System.out.println("model.Subtask list:\n" + manager.getSubtaskList());
         System.out.println(manager);
+        manager.getTaskById(1);
+        System.out.println(manager.getHistory());
         System.out.println(manager.getIdOfAllTasks());
 
 

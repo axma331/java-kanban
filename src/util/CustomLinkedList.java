@@ -19,7 +19,9 @@ public class CustomLinkedList {
 
     public void add(Task task) {
         removeNode(searchByHistory.get(task.getId()));
-        linkLast(searchByHistory.put(task.getId(), new Node(task)));
+        Node node = new Node(task);
+        searchByHistory.put(task.getId(), node);
+        linkLast(node);
     }
 
     public void linkLast(Node node) {
