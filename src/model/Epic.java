@@ -72,12 +72,12 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() +
+        return '{' + this.getClass().getSimpleName() +
                 "id=" + getId() +
                 ", name='" + getName() +
                 ", description='" + getDescription().length() +
                 ", status=" + getStatus() +
                 ", subtasks=" + subTasks +
-                '\n';
+                "}\n";
     }
 }

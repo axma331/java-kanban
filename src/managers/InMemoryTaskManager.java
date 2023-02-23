@@ -6,6 +6,7 @@ import model.Task;
 import model.TaskStatus;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
     private static int id = -1;
@@ -66,22 +67,30 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Integer> getSubTaskIdListByEpicId(int epicId) {
-        List<Integer> list = new ArrayList<>();
-        for (Subtask subTask : getSubTaskListByEpicId(epicId)) {
-            list.add(subTask.getId());
-        }
-        return list;
+        List<Subtask> subtaskList = subtasks.values().stream()
+                .filter(x -> x.getEpicId() == epicId)
+                .collect(Collectors.toList());
+        return subtaskList.stream().map(Subtask::getId).collect(Collectors.toList());
     }
-
     @Override
     public List<Subtask> getSubTaskListByEpicId(int epicId) {
-        List<Subtask> list = new ArrayList<>();
-        for (Subtask subTask : getSubtaskList()) {
-            if (subTask.getEpicId() == epicId) {
-                list.add(subTask);
-            }
-        }
-        return list;
+        List<Subtask> subtaskList = subtasks.values().stream()
+                .filter(x -> x.getEpicId() == epicId)
+                .collect(Collectors.toList());
+        subtaskList.forEach(history::add);
+        return subtaskList;
+    }
+
+    public List<Integer> getSubTaskIdList() {
+        return subtasks.values().stream().map(Subtask::getId).collect(Collectors.toList());
+    }
+
+    public List<Integer> getTaskIdList() {
+        return tasks.values().stream().map(Task::getId).collect(Collectors.toList());
+    }
+
+    public List<Integer> getEpicIdList() {
+        return epics.values().stream().map(Epic::getId).collect(Collectors.toList());
     }
 
     @Override
@@ -106,16 +115,19 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Task> getTaskList() {
+        tasks.values().forEach(history::add);
         return new ArrayList<>(tasks.values());
     }
 
     @Override
     public List<Epic> getEpicList() {
+        epics.values().forEach(history::add);
         return new ArrayList<>(epics.values());
     }
 
     @Override
     public List<Subtask> getSubtaskList() {
+        subtasks.values().forEach(history::add);
         return new ArrayList<>(subtasks.values());
     }
 
@@ -134,7 +146,13 @@ public class InMemoryTaskManager implements TaskManager {
         tasks.clear();
         epics.clear();
         subtasks.clear();
+        history.clear();
     }
+
+    public void clearHistory() {
+        history.clear();
+    }
+
 
     /**
      * Удаление задачи с указанным идентификатором. Если задача является Epic, то так уже удаляется все его подзадачи.<br>
@@ -149,6 +167,7 @@ public class InMemoryTaskManager implements TaskManager {
         } else if (epics.containsKey(id)) {
             for (int subtaskId : epics.get(id).getSubTasks()) {
                 subtasks.remove(subtaskId);
+                history.remove(subtaskId);
             }
             epics.remove(id);
         } else if (subtasks.containsKey(id)) {
@@ -158,6 +177,7 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             tasks.remove(id);
         }
+        history.remove(id);
     }
 
     @Override
@@ -220,6 +240,10 @@ public class InMemoryTaskManager implements TaskManager {
         tasks.put(epic.getId(), epic);
         System.out.println("You changed " + epic.getClass().getSimpleName() + "s " +
                 "status from " + oldTask.getStatus() + " to " + newStatus);
+    }
+
+    public List<Integer> epicIdSetUtil() {
+        return epics.values().stream().map(Epic::getId).collect(Collectors.toList());
     }
 
     //History

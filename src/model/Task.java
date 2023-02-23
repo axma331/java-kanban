@@ -76,11 +76,11 @@ public class Task {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() +
+        return '{' + this.getClass().getSimpleName() +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description.length() + '\'' +
                 ", status=" + status +
-                '\n';
+                "}\n";
     }
 }

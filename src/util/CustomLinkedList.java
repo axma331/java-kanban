@@ -31,6 +31,7 @@ public class CustomLinkedList {
             head = node;
         } else {
             t.next = node;
+            node.prev = t;
         }
     }
 
@@ -55,10 +56,16 @@ public class CustomLinkedList {
             next.prev = prev;
             node.next = null;
         }
+        searchByHistory.remove(node.task.getId());
     }
 
     public void remove(int id) {
         removeNode(searchByHistory.get(id));
+    }
+
+    public void clear() {
+        while (head != null) removeFirst();
+        searchByHistory.clear();
     }
 
     public List<Task> getTasks() {
@@ -68,7 +75,7 @@ public class CustomLinkedList {
         List<Task> list = new ArrayList<>(searchByHistory.size());
         do {
             list.add(node.getTask());
-            node = head.next;
+            node = node.next;
         } while (node != null);
         return list;
     }

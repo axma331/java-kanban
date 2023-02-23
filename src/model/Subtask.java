@@ -38,12 +38,12 @@ public class Subtask extends Task {
     }
 
     public String toString() {
-        return this.getClass().getSimpleName() +
+        return '{' + this.getClass().getSimpleName() +
                 "id=" + getId() +
                 ", name='" + getName() +
                 ", description='" + getDescription().length() +
                 ", status=" + getStatus() +
                 ", epicId=" + epicId +
-                '\n';
+                "}\n";
     }
 }
