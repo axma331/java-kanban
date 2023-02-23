@@ -93,6 +93,10 @@ public class InMemoryTaskManager implements TaskManager {
         return epics.values().stream().map(Epic::getId).collect(Collectors.toList());
     }
 
+    public int getEpicIdBySubtaskId(int id) {
+        return epics.get(subtasks.get(id).getEpicId()).getId();
+    }
+
     @Override
     public Task getTaskById(int taskId) {
         Task task;
