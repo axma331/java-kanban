@@ -3,7 +3,7 @@ package managers;
 import model.Epic;
 import model.Subtask;
 import model.Task;
-import model.TaskStatus;
+import model.Status;
 
 import java.util.*;
 
@@ -32,9 +32,14 @@ public interface TaskManager {
 
     Set<Integer> getIdOfAllTasks();
 
-    void updateTask(Task oldTask, TaskStatus newStatus);
+    void updateTask(Task oldTask, Status newStatus);
 
     void checkStatusOfEpic(Epic oldTask);
 
+    List<Task> getHistory();
+
+    void clearHistory();
+
+    int getEpicIdBySubtaskId(int id);
 }
 

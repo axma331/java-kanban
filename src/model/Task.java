@@ -6,7 +6,7 @@ public class Task {
     private String name;
     private String description;
     private int id;
-    private TaskStatus status;
+    private Status status;
 
     // Constructor
 
@@ -20,14 +20,14 @@ public class Task {
         this.name = name;
         this.description = description;
         this.id = 0;
-        this.status = TaskStatus.NEW;
+        this.status = Status.NEW;
     }
 
     public Task(String name, String description, int taskId) {
         this.name = name;
         this.description = description;
         this.id = taskId;
-        this.status = TaskStatus.NEW;
+        this.status = Status.NEW;
     }
 
     // Getters
@@ -44,7 +44,7 @@ public class Task {
         return description;
     }
 
-    public TaskStatus getStatus() {
+    public Status getStatus() {
         return status;
     }
 
@@ -54,7 +54,7 @@ public class Task {
         this.id = id;
     }
 
-    public void setStatus(TaskStatus newStatus) {
+    public void setStatus(Status newStatus) {
         this.status = newStatus;
     }
 

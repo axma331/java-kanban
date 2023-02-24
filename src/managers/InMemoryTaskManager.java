@@ -3,7 +3,7 @@ package managers;
 import model.Epic;
 import model.Subtask;
 import model.Task;
-import model.TaskStatus;
+import model.Status;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -196,7 +196,7 @@ public class InMemoryTaskManager implements TaskManager {
     //Update task
 
     @Override
-    public void updateTask(Task oldTask, TaskStatus newStatus) {
+    public void updateTask(Task oldTask, Status newStatus) {
         if (Task.class == oldTask.getClass()) {
             Task task = new Task(oldTask.getName(), oldTask.getDescription(), oldTask.getId());
             task.setStatus(newStatus);
@@ -221,23 +221,23 @@ public class InMemoryTaskManager implements TaskManager {
         int numberOfSubtasks = oldTask.getSubTasks().size();
         int count = 0;
         for (int subTaskId : oldTask.getSubTasks()) {
-            if (TaskStatus.DONE == subtasks.get(subTaskId).getStatus()
+            if (Status.DONE == subtasks.get(subTaskId).getStatus()
                     && ++count == numberOfSubtasks) {
-                updateStatusOfEpic(oldTask, TaskStatus.DONE);
+                updateStatusOfEpic(oldTask, Status.DONE);
                 return;
-            } else if (TaskStatus.IN_PROGRESS == subtasks.get(subTaskId).getStatus()) {
-                updateStatusOfEpic(oldTask, TaskStatus.IN_PROGRESS);
+            } else if (Status.IN_PROGRESS == subtasks.get(subTaskId).getStatus()) {
+                updateStatusOfEpic(oldTask, Status.IN_PROGRESS);
                 return;
             }
         }
         if (count != 0) {
-            updateStatusOfEpic(oldTask, TaskStatus.IN_PROGRESS);
+            updateStatusOfEpic(oldTask, Status.IN_PROGRESS);
         }
         System.out.println("The status " + oldTask.getStatus() + " of " + oldTask.getClass().getSimpleName() + "s " +
                 " remained unchanged.");
     }
 
-    private void updateStatusOfEpic(Epic oldTask, TaskStatus newStatus) {
+    private void updateStatusOfEpic(Epic oldTask, Status newStatus) {
         Epic epic = new Epic(oldTask.getName(), oldTask.getDescription(), oldTask.getId());
         epic.addSubTasks(oldTask.getSubTasks());
         epic.setStatus(newStatus);

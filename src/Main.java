@@ -1,31 +1,33 @@
-import managers.InMemoryTaskManager;
+import managers.Managers;
+import managers.TaskManager;
 import model.*;
+import util.PreTaskType;
+import util.TaskMapper;
 
 import java.util.List;
-import java.util.Random;
 
 public class Main {
 
     public static void main(String[] args) {
-        InMemoryTaskManager manager = new InMemoryTaskManager();
-        TaskMapper mapper = new TaskMapper(manager);
+        TaskManager manager = Managers.getDefault();
+        TaskMapper map = new TaskMapper(manager);
 
         System.out.println("Part 1: create new tasks end add to list");
         {
-            manager.addTask(mapper.mapper(PreTaskType.TASK));
-            manager.addTask(mapper.mapper(PreTaskType.EPIC));
-            manager.addTask(mapper.mapper(PreTaskType.SUB));
-            manager.addTask(mapper.mapper(PreTaskType.SUB));
-            manager.addTask(mapper.mapper(PreTaskType.TASK));
-            manager.addTask(mapper.mapper(PreTaskType.EPIC));
-            manager.addTask(mapper.mapper(PreTaskType.EPIC));
-            manager.addTask(mapper.mapper(PreTaskType.SUB));
-            manager.addTask(mapper.mapper(PreTaskType.SUB));
-            manager.addTask(mapper.mapper(PreTaskType.SUB));
-            manager.addTask(mapper.mapper(PreTaskType.EPIC));
-            manager.addTask(mapper.mapper(PreTaskType.TASK));
-            manager.addTask(mapper.mapper(PreTaskType.SUB));
-            manager.addTask(mapper.mapper(PreTaskType.TASK));
+            manager.addTask(map.mapper(PreTaskType.TASK));
+            manager.addTask(map.mapper(PreTaskType.EPIC));
+            manager.addTask(map.mapper(PreTaskType.SUB));
+            manager.addTask(map.mapper(PreTaskType.SUB));
+            manager.addTask(map.mapper(PreTaskType.TASK));
+            manager.addTask(map.mapper(PreTaskType.EPIC));
+            manager.addTask(map.mapper(PreTaskType.EPIC));
+            manager.addTask(map.mapper(PreTaskType.SUB));
+            manager.addTask(map.mapper(PreTaskType.SUB));
+            manager.addTask(map.mapper(PreTaskType.SUB));
+            manager.addTask(map.mapper(PreTaskType.EPIC));
+            manager.addTask(map.mapper(PreTaskType.TASK));
+            manager.addTask(map.mapper(PreTaskType.SUB));
+            manager.addTask(map.mapper(PreTaskType.TASK));
             System.out.println(manager);
         }
         System.out.println("Part 2: check get method");
@@ -53,27 +55,27 @@ public class Main {
                 System.out.println("History:\n" + manager.getHistory());
             }
             {
-                System.out.println("SubTaskList 1:\n" + manager.getSubTaskListByEpicId(mapper.randomTaskId(PreTaskType.EPIC)));
-                System.out.println("SubTaskList 2:\n" + manager.getSubTaskListByEpicId(mapper.randomTaskId(PreTaskType.EPIC)));
+                System.out.println("SubTaskList 1:\n" + manager.getSubTaskListByEpicId(map.randomTaskId(PreTaskType.EPIC)));
+                System.out.println("SubTaskList 2:\n" + manager.getSubTaskListByEpicId(map.randomTaskId(PreTaskType.EPIC)));
                 System.out.println("History:\n" + manager.getHistory());
                 System.out.println(manager);
             }
         }
         System.out.println("Part 3: task delete check");
         {
-            int randomTask = 0;
+            int randomTask;
             {
-                randomTask = mapper.randomTaskId(PreTaskType.EPIC);
+                randomTask = map.randomTaskId(PreTaskType.EPIC);
                 System.out.println("Delete task with id " + randomTask);
                 manager.deleteTaskById(randomTask);
             }
             {
-                randomTask = mapper.randomTaskId(PreTaskType.TASK);
+                randomTask = map.randomTaskId(PreTaskType.TASK);
                 System.out.println("Delete task with id " + randomTask);
                 manager.deleteTaskById(randomTask);
             }
             {
-                randomTask = mapper.randomTaskId(PreTaskType.SUB);
+                randomTask = map.randomTaskId(PreTaskType.SUB);
                 System.out.println("Delete task with id " + randomTask);
                 manager.deleteTaskById(randomTask);
             }
@@ -83,60 +85,59 @@ public class Main {
         }
         System.out.println("Part 4: check update of task data ");
         {
-            manager.addTask(mapper.mapper(PreTaskType.EPIC));
-            manager.addTask(mapper.mapper(PreTaskType.SUB));
-            manager.addTask(mapper.mapper(PreTaskType.SUB));
-            manager.addTask(mapper.mapper(PreTaskType.SUB));
+            manager.addTask(map.mapper(PreTaskType.EPIC));
+            manager.addTask(map.mapper(PreTaskType.SUB));
+            manager.addTask(map.mapper(PreTaskType.SUB));
+            manager.addTask(map.mapper(PreTaskType.SUB));
 
             int randomId;
             Task taskById;
             System.out.println("4.1 Check Task");
             {
-                randomId = mapper.randomTaskId(PreTaskType.TASK);
+                randomId = map.randomTaskId(PreTaskType.TASK);
                 taskById = manager.getTaskById(randomId);
                 System.out.println("Task id=" + randomId + "\n" + taskById.getClass().getSimpleName() + " " + taskById);
-                manager.updateTask(taskById, TaskStatus.IN_PROGRESS);
+                manager.updateTask(taskById, Status.IN_PROGRESS);
                 System.out.println(taskById.getClass().getSimpleName() + " " + manager.getTaskById(randomId));
             }
             System.out.println("4.2 Check epic");
             {
-                randomId = mapper.randomTaskId(PreTaskType.SUB);
+                randomId = map.randomTaskId(PreTaskType.SUB);
                 taskById = manager.getTaskById(randomId);
                 int epicId = manager.getEpicIdBySubtaskId(randomId);
                 System.out.println("Task id=" + randomId + "\n" + taskById.getClass().getSimpleName() + " " + taskById);
                 System.out.println("Epic " + manager.getTaskById(epicId));
                 System.out.println(manager.getSubTaskListByEpicId(epicId));
-                manager.updateTask(taskById, TaskStatus.IN_PROGRESS);
+                manager.updateTask(taskById, Status.IN_PROGRESS);
                 System.out.println(taskById.getClass().getSimpleName() + " " + manager.getTaskById(randomId));
                 System.out.println(manager.getTaskById(epicId));
                 System.out.println(manager.getSubTaskListByEpicId(epicId));
             }
             System.out.println("4.3 Check epic: in progress");
             {
-                randomId = mapper.randomTaskId(PreTaskType.SUB);
+                randomId = map.randomTaskId(PreTaskType.SUB);
                 taskById = manager.getTaskById(randomId);
                 int epicId = manager.getEpicIdBySubtaskId(randomId);
                 System.out.println("Task id=" + randomId + "\n" + taskById.getClass().getSimpleName() + " " + taskById);
                 System.out.println("Epic " + manager.getTaskById(epicId));
                 System.out.println(manager.getSubTaskListByEpicId(epicId));
-                manager.updateTask(taskById, TaskStatus.DONE);
+                manager.updateTask(taskById, Status.DONE);
                 System.out.println(taskById.getClass().getSimpleName() + " " + manager.getTaskById(randomId));
                 System.out.println(manager.getTaskById(epicId));
                 System.out.println(manager.getSubTaskListByEpicId(epicId));
             }
             System.out.println("4.4 Check epic: done");
             {
-                randomId = mapper.randomTaskId(PreTaskType.EPIC);
+                randomId = map.randomTaskId(PreTaskType.EPIC);
                 taskById = manager.getTaskById(randomId);
                 System.out.println("Task id=" + randomId + "\n" + taskById.getClass().getSimpleName() + " " + taskById);
                 List<Subtask> subtasks = manager.getSubTaskListByEpicId(randomId);
                 System.out.println(subtasks);
-                subtasks.forEach(x -> manager.updateTask(x, TaskStatus.DONE));
+                subtasks.forEach(x -> manager.updateTask(x, Status.DONE));
                 System.out.println(taskById.getClass().getSimpleName() + " " + manager.getTaskById(randomId));
                 System.out.println(manager.getSubTaskListByEpicId(randomId));
             }
         }
-
 //        System.out.println("Part 5:");
 //        Task task2 = new Task("task_task_2", "task_description_2");
 //        Task task3 = new Task("task_task_3", "task_description_3");
@@ -211,67 +212,5 @@ public class Main {
 //        manager.deleteTaskById(eTask_52.getId());
 //        manager.getHistory();
 //        System.out.println("The end!");
-
     }
-
-    private static final class TaskMapper<T> {
-        InMemoryTaskManager manager;
-        private static int idT = 0;
-        private static int idE = 0;
-        private static int idS = 0;
-
-        public TaskMapper(InMemoryTaskManager manager) {
-            this.manager = manager;
-        }
-
-        /**
-         * Создание предварительную задачу с названием и описанием.
-         *
-         * @param pref тип создаваемой предварительной задачи
-         * @return объект предварительной задачи
-         */
-        Task mapper(PreTaskType pref) {
-            String type = pref.getValue();
-            String name = "_task_";
-            String description = "_description_";
-            if (pref.equals(PreTaskType.TASK)) {
-                return new Task(type + name + idT, type + description + idT++);
-            } else if (pref.equals(PreTaskType.EPIC)) {
-                return new Epic(type + name + idE, type + description + idE++);
-            } else if (pref.equals(PreTaskType.SUB)) {
-                return new Subtask(type + name + idS, type + description + idS++, randomTaskId(PreTaskType.EPIC));
-            }
-            return null;
-        }
-
-        public int randomTaskId(PreTaskType type) {
-            Random random = new Random();
-            switch (type) {
-                case TASK:
-                    return manager.getTaskIdList().get(random.nextInt(manager.getTaskIdList().size()));
-                case EPIC:
-                    return manager.getEpicIdList().get(random.nextInt(manager.getEpicIdList().size()));
-                case SUB:
-                    return manager.getSubTaskIdList().get(random.nextInt(manager.getSubTaskIdList().size()));
-            }
-            return 0;
-        }
-    }
-
-    private enum PreTaskType {
-        TASK("task"),
-        EPIC("epic"),
-        SUB("sub");
-
-        private final String value;
-
-        PreTaskType(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-    }
-
 }
