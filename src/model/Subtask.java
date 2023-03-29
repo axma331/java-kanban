@@ -15,6 +15,11 @@ public class Subtask extends Task {
         this.epicId = epicId;
     }
 
+    public Subtask(String[] arr) {
+        super(arr);
+        this.epicId = Integer.parseInt(arr[5]);
+    }
+
 //getters
 
     public int getEpicId() {
@@ -35,6 +40,11 @@ public class Subtask extends Task {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), epicId);
+    }
+
+    @Override
+    public String toStringForFile() {
+        return super.toStringForFile() + epicId;
     }
 
     public String toString() {

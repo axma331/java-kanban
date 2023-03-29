@@ -1,9 +1,9 @@
 package managers;
 
 import model.Epic;
+import model.Status;
 import model.Subtask;
 import model.Task;
-import model.Status;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -72,6 +72,7 @@ public class InMemoryTaskManager implements TaskManager {
                 .collect(Collectors.toList());
         return subtaskList.stream().map(Subtask::getId).collect(Collectors.toList());
     }
+
     @Override
     public List<Subtask> getSubTaskListByEpicId(int epicId) {
         List<Subtask> subtaskList = subtasks.values().stream()
@@ -254,6 +255,16 @@ public class InMemoryTaskManager implements TaskManager {
 
     public List<Task> getHistory() {
         return this.history.getHistory();
+    }
+
+    protected HistoryManager getHistoryManager() {
+        return this.history;
+    }
+
+    public void setHistoryFromFile(List<Integer> idList) {
+        for (Integer id : idList) {
+            history.add(getTaskById(id));
+        }
     }
 
     //Additional methods

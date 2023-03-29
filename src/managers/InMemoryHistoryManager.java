@@ -3,7 +3,6 @@ package managers;
 import model.Task;
 import util.CustomLinkedList;
 
-import java.util.Collections;
 import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {

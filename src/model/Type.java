@@ -1,19 +1,19 @@
-package util;
+package model;
 
-
-
-public enum PreTaskType {
-    TASK("task"),
-    EPIC("epic"),
-    SUB("sub");
+public enum Type {
+    TASK("Task"),
+    EPIC("Epic"),
+    SUBTASK("Subtask");
 
     private final String value;
 
-    PreTaskType(String value) {
+    Type(String value) {
         this.value = value;
     }
 
     public String getValue() {
         return value;
     }
+
+
 }

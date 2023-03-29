@@ -1,11 +1,12 @@
 package managers;
 
 import model.Epic;
+import model.Status;
 import model.Subtask;
 import model.Task;
-import model.Status;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 
 public interface TaskManager {
 
@@ -41,5 +42,7 @@ public interface TaskManager {
     void clearHistory();
 
     int getEpicIdBySubtaskId(int id);
+
+    void setHistoryFromFile(List<Integer> idList);
 }
 

@@ -29,6 +29,12 @@ public class Task {
         this.id = taskId;
         this.status = Status.NEW;
     }
+    public Task(String[] arr) {
+        this.id = Integer.parseInt(arr[0]);
+        this.name = arr[2];
+        this.status = Status.valueOf(arr[3]);
+        this.description = arr[4];
+    }
 
     // Getters
 
@@ -72,6 +78,15 @@ public class Task {
     @Override
     public int hashCode() {
         return 31 * Objects.hash(name, description, id, status);
+    }
+
+    public String toStringForFile(){
+        return new StringBuilder()
+                .append(id).append(",")
+                .append(this.getClass().getSimpleName()).append(",")
+                .append(name).append(",")
+                .append(status).append(",")
+                .append(description).append(",").toString();
     }
 
     @Override
