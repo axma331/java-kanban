@@ -28,8 +28,8 @@ public class InMemoryTaskManager implements TaskManager {
      *
      * @return следующий уникальный идентификатор задачи
      */
-    private int getNextFreeId() {
-        return ++id;
+    private int getIdOrNextFreeId(int id) {
+        return id != -1 ? id : ++InMemoryTaskManager.id;
     }
 
     //Add task
@@ -42,13 +42,13 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void addTask(Task preTask) {
         if (Task.class == preTask.getClass()) {
-            Task task = new Task(preTask.getName(), preTask.getDescription(), getNextFreeId());
+            Task task = new Task(preTask.getName(), preTask.getDescription(), getIdOrNextFreeId(preTask.getId()));
             tasks.put(task.getId(), task);
         } else if (Epic.class == preTask.getClass()) {
-            Epic task = new Epic(preTask.getName(), preTask.getDescription(), getNextFreeId());
+            Epic task = new Epic(preTask.getName(), preTask.getDescription(), getIdOrNextFreeId(preTask.getId()));
             epics.put(task.getId(), task);
         } else if (Subtask.class == preTask.getClass()) {
-            Subtask task = new Subtask(preTask.getName(), preTask.getDescription(), getNextFreeId(), ((Subtask) preTask).getEpicId());
+            Subtask task = new Subtask(preTask.getName(), preTask.getDescription(), getIdOrNextFreeId(preTask.getId()), ((Subtask) preTask).getEpicId());
             subtasks.put(task.getId(), task);
             updateInfoAboutSubTasks(task.getEpicId());
         }
@@ -262,9 +262,9 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     public void setHistoryFromFile(List<Integer> idList) {
-        for (Integer id : idList) {
-            history.add(getTaskById(id));
-        }
+            for (Integer id : idList) {
+                history.add(getTaskById(id));
+            }
     }
 
     //Additional methods
