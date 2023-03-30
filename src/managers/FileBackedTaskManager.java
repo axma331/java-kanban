@@ -17,27 +17,34 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private static final String BACKUP = "storage.csv";
     private static final String TITLE = "id,type,name,status,description,epic";
 
-    public static void main(String[] args) throws ManagerSaveException {
+    public static void main(String[] args) {
+        try {
+            TaskManager manager = loadFromFile(new File(BACKUP));
 
-        TaskManager manager = Managers.getFileBacked();
-        TaskMapper map = new TaskMapper(manager);
+            System.out.println("Part 1: saving tasks");
+            {
+                TaskMapper map = new TaskMapper(manager);
+                manager.addTask(map.mapper(Type.TASK));
+                manager.addTask(map.mapper(Type.EPIC));
+                manager.addTask(map.mapper(Type.SUBTASK));
+                manager.addTask(map.mapper(Type.SUBTASK));
+                manager.addTask(map.mapper(Type.TASK));
+                manager.addTask(map.mapper(Type.EPIC));
+            }
 
-        System.out.println("Part 1: create new tasks end add to list");
-        {
-            manager.addTask(map.mapper(Type.TASK));
-            manager.addTask(map.mapper(Type.EPIC));
-            manager.addTask(map.mapper(Type.SUBTASK));
-            manager.addTask(map.mapper(Type.SUBTASK));
-            manager.addTask(map.mapper(Type.TASK));
-            manager.addTask(map.mapper(Type.EPIC));
+            TaskManager managerT = loadFromFile(new File(BACKUP));
+
+            System.out.println("Part 2: loading tasks");
+            {
+                System.out.println(manager);
+                System.out.println(managerT);
+                System.out.println("History:\n" + manager.getHistory());
+                System.out.println("History:\n" + managerT.getHistory());
+            }
+
+        } catch (ManagerSaveException e) {
+            e.getMessage();
         }
-
-        TaskManager managerT = loadFromFile(new File(BACKUP));
-        System.out.println(manager);
-        System.out.println(managerT);
-        System.out.println("History:\n" + manager.getHistory());
-        System.out.println("History:\n" + managerT.getHistory());
-
     }
 
     public static FileBackedTaskManager loadFromFile(File file) throws ManagerSaveException {
@@ -47,7 +54,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             boolean isHistory = false;
             boolean firstStep = true;
 
-            while (reader.ready()){
+            while (reader.ready()) {
                 line = reader.readLine();
 
                 if (firstStep) {
@@ -126,7 +133,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public void addTask(Task task) {
         super.addTask(task);
-         save();
+        save();
     }
 
 }
