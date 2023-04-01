@@ -1,9 +1,9 @@
-package managers;
+package taskTracker.managers;
 
-import model.Epic;
-import model.Status;
-import model.Subtask;
-import model.Task;
+import taskTracker.model.Epic;
+import taskTracker.model.Status;
+import taskTracker.model.Subtask;
+import taskTracker.model.Task;
 
 import java.util.*;
 import java.util.stream.Collectors;

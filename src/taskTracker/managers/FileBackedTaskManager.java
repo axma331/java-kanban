@@ -1,11 +1,11 @@
-package managers;
+package taskTracker.managers;
 
-import exception.ManagerSaveException;
-import model.Epic;
-import model.Subtask;
-import model.Task;
-import model.Type;
-import util.TaskMapper;
+import taskTracker.exception.ManagerSaveException;
+import taskTracker.model.Epic;
+import taskTracker.model.Subtask;
+import taskTracker.model.Task;
+import taskTracker.model.Type;
+import taskTracker.util.TaskMapper;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
-    private static final String BACKUP = "storage.csv";
+    private static final String BACKUP = "resources/storage.csv";
     private static final String TITLE = "id,type,name,status,description,epic";
 
     public static void main(String[] args) {

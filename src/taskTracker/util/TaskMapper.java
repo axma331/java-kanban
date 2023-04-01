@@ -1,11 +1,11 @@
-package util;
+package taskTracker.util;
 
-import managers.InMemoryTaskManager;
-import managers.TaskManager;
-import model.Epic;
-import model.Subtask;
-import model.Task;
-import model.Type;
+import taskTracker.managers.InMemoryTaskManager;
+import taskTracker.managers.TaskManager;
+import taskTracker.model.Epic;
+import taskTracker.model.Subtask;
+import taskTracker.model.Task;
+import taskTracker.model.Type;
 
 import java.util.Random;
 

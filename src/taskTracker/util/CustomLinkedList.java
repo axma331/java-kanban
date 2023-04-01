@@ -1,6 +1,6 @@
-package util;
+package taskTracker.util;
 
-import model.Task;
+import taskTracker.model.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,6 +1,6 @@
-package managers;
+package taskTracker.managers;
 
-import model.Task;
+import taskTracker.model.Task;
 
 import java.util.List;
 

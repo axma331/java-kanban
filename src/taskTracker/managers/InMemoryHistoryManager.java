@@ -1,7 +1,7 @@
-package managers;
+package taskTracker.managers;
 
-import model.Task;
-import util.CustomLinkedList;
+import taskTracker.model.Task;
+import taskTracker.util.CustomLinkedList;
 
 import java.util.List;
 

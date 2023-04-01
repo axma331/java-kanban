@@ -1,10 +1,10 @@
-import managers.Managers;
-import managers.TaskManager;
-import model.Status;
-import model.Subtask;
-import model.Task;
-import util.TaskMapper;
-import model.Type;
+import taskTracker.managers.Managers;
+import taskTracker.managers.TaskManager;
+import taskTracker.model.Status;
+import taskTracker.model.Subtask;
+import taskTracker.model.Task;
+import taskTracker.model.Type;
+import taskTracker.util.TaskMapper;
 
 import java.util.List;
 
