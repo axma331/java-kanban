@@ -5,6 +5,8 @@ import taskTracker.model.Status;
 import taskTracker.model.Subtask;
 import taskTracker.model.Task;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -43,13 +45,13 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void addTask(Task preTask) {
         if (Task.class == preTask.getClass()) {
-            Task task = new Task(preTask.getName(), preTask.getDescription(), getIdOrNextFreeId(preTask.getId()));
+            Task task = new Task(preTask.getName(), preTask.getDescription(), getIdOrNextFreeId(preTask.getId()), preTask.getStartTime(), preTask.getDuration());
             tasks.put(task.getId(), task);
         } else if (Epic.class == preTask.getClass()) {
-            Epic task = new Epic(preTask.getName(), preTask.getDescription(), getIdOrNextFreeId(preTask.getId()));
+            Epic task = new Epic(preTask.getName(), preTask.getDescription(), getIdOrNextFreeId(preTask.getId()), preTask.getStartTime(), preTask.getDuration());
             epics.put(task.getId(), task);
         } else if (Subtask.class == preTask.getClass()) {
-            Subtask task = new Subtask(preTask.getName(), preTask.getDescription(), getIdOrNextFreeId(preTask.getId()), ((Subtask) preTask).getEpicId());
+            Subtask task = new Subtask(preTask.getName(), preTask.getDescription(), getIdOrNextFreeId(preTask.getId()), ((Subtask) preTask).getEpicId(), preTask.getStartTime(), preTask.getDuration());
             subtasks.put(task.getId(), task);
             updateInfoAboutSubTasks(task.getEpicId());
         }
@@ -58,8 +60,22 @@ public class InMemoryTaskManager implements TaskManager {
     private void updateInfoAboutSubTasks(int epicId) {
         if (epics.containsKey(epicId)) {
             Epic task = epics.get(epicId);
-            Epic updatedTask = new Epic(task.getName(), task.getDescription(), epicId);
+            Epic updatedTask = new Epic(task.getName(), task.getDescription(), epicId, task.getStartTime(), task.getDuration());
             updatedTask.addSubTasks(getSubTaskIdListByEpicId(epicId));
+
+            List<Subtask> subtaskList = getSubTaskListByEpicId(epicId);
+            updatedTask.setDuration(subtaskList.stream().
+                    map(Subtask::getDuration)
+                    .reduce(Duration.ZERO, Duration::plus));
+
+            updatedTask.setStartTime(subtaskList.stream().
+                    map(Subtask::getEndTime)
+                    .reduce(Instant.MAX, (a, b) -> a.isBefore(b) ? a : b));
+
+            updatedTask.setEndTime(subtaskList.stream().
+                    map(Subtask::getEndTime)
+                    .reduce(Instant.MIN, (a, b) -> a.isAfter(b) ? a : b));
+
             epics.put(task.getId(), updatedTask);
         } else {
             System.out.println("Epic c id №" + epicId + " не существует. Привязка невозможна!");
@@ -200,14 +216,14 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateTask(Task oldTask, Status newStatus) {
         if (Task.class == oldTask.getClass()) {
-            Task task = new Task(oldTask.getName(), oldTask.getDescription(), oldTask.getId());
+            Task task = new Task(oldTask.getName(), oldTask.getDescription(), oldTask.getId(), oldTask.getStartTime(), oldTask.getDuration());
             task.setStatus(newStatus);
             tasks.put(task.getId(), task);
             System.out.println("You changed " + task.getClass().getSimpleName() + "s " +
                     "status from " + oldTask.getStatus() + " to " + newStatus);
         } else if (Subtask.class == oldTask.getClass()) {
             Subtask subtask = new Subtask(oldTask.getName(), oldTask.getDescription(), oldTask.getId(),
-                    ((Subtask) oldTask).getEpicId());
+                    ((Subtask) oldTask).getEpicId(), oldTask.getStartTime(), oldTask.getDuration());
             subtask.setStatus(newStatus);
             subtasks.put(subtask.getId(), subtask);
             System.out.println("You changed " + subtask.getClass().getSimpleName() + "s " +
@@ -240,7 +256,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private void updateStatusOfEpic(Epic oldTask, Status newStatus) {
-        Epic epic = new Epic(oldTask.getName(), oldTask.getDescription(), oldTask.getId());
+        Epic epic = new Epic(oldTask.getName(), oldTask.getDescription(), oldTask.getId(), oldTask.getStartTime(), oldTask.getDuration());
         epic.addSubTasks(oldTask.getSubTasks());
         epic.setStatus(newStatus);
         tasks.put(epic.getId(), epic);

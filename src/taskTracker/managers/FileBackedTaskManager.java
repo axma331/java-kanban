@@ -8,6 +8,7 @@ import taskTracker.model.Type;
 import taskTracker.util.TaskMapper;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private static final String BACKUP = "resources/storage.csv";
-    private static final String TITLE = "id,type,name,status,description,epic";
+    private static final String TITLE = "id,type,name,status,description,start_time,duration,epic";
 
     public static void main(String[] args) {
         try {
@@ -80,7 +81,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private void save() {
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(BACKUP));) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(BACKUP, StandardCharsets.UTF_8));) {
             writer.write(TITLE);
             writer.newLine();
 

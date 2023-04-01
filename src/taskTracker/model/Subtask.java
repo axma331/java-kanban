@@ -1,5 +1,7 @@
 package taskTracker.model;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Objects;
 
 public class Subtask extends Task {
@@ -10,14 +12,14 @@ public class Subtask extends Task {
         this.epicId = epicId;
     }
 
-    public Subtask(String name, String description, int taskId, int epicId) {
-        super(name, description, taskId);
+    public Subtask(String name, String description, int taskId, int epicId, Instant startTime, Duration duration) {
+        super(name, description, taskId, startTime, duration);
         this.epicId = epicId;
     }
 
     public Subtask(String[] arr) {
         super(arr);
-        this.epicId = Integer.parseInt(arr[5]);
+        this.epicId = Integer.parseInt(arr[7]);
     }
 
 //getters
@@ -54,6 +56,7 @@ public class Subtask extends Task {
                 ", description='" + getDescription().length() +
                 ", status=" + getStatus() +
                 ", epicId=" + epicId +
-                "}\n";
+                ", startTime=" + getStartTime() +
+                ", duration=" + getDuration() + "}\n";
     }
 }

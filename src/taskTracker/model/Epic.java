@@ -1,19 +1,22 @@
 package taskTracker.model;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Epic extends Task {
     private List<Integer> subTasks;
+    Instant endTime;
 
     public Epic(String name, String description) {
         super(name, description);
         this.subTasks = new ArrayList<>();
     }
 
-    public Epic(String name, String description, int taskId) {
-        super(name, description, taskId);
+    public Epic(String name, String description, int taskId, Instant startTime, Duration duration) {
+        super(name, description, taskId, startTime, duration);
         this.subTasks = new ArrayList<>();
     }
 
@@ -46,6 +49,10 @@ public class Epic extends Task {
 
     public void addSubTask(int subTaskId) {
         this.subTasks.add(subTaskId);
+    }
+
+    public void setEndTime(Instant endTime) {
+        this.endTime = endTime;
     }
 
     // Clear subtask
@@ -83,6 +90,7 @@ public class Epic extends Task {
                 ", description='" + getDescription().length() +
                 ", status=" + getStatus() +
                 ", subtasks=" + subTasks +
-                "}\n";
+                ", startTime=" + getStartTime() +
+                ", duration=" + getDuration() + "}\n";
     }
 }
