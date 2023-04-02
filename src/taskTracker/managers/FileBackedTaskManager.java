@@ -1,5 +1,6 @@
 package taskTracker.managers;
 
+import taskTracker.exception.ManagerLoadException;
 import taskTracker.model.Epic;
 import taskTracker.model.Subtask;
 import taskTracker.model.Task;
@@ -7,20 +8,24 @@ import taskTracker.model.Type;
 import taskTracker.util.TaskMapper;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
-    private static final Path path = Path.of("resources/main/storage.csv");
-    private static final String TITLE = "id,type,name,status,description,start_time,duration,epic";
+    private final Path path;
+    private static final String TITLE = "id,type,name,description,status,start_time,duration,epic";
 
     public static void main(String[] args) {
-            TaskManager manager = loadFromFile(path);
+        Path mainPath = Path.of("resources/main/storage.csv");
+
+        TaskManager manager = loadFromFile(mainPath);
 
             System.out.println("Part 1: saving tasks");
             {
@@ -33,7 +38,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 manager.addTask(map.mapper(Type.EPIC));
             }
 
-            TaskManager managerT = loadFromFile(path);
+            TaskManager managerT = loadFromFile(mainPath);
 
             System.out.println("Part 2: loading tasks");
             {
@@ -44,33 +49,42 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             }
     }
 
+
+    public FileBackedTaskManager(Path path) {
+        this.path = path;
+    }
+
     public static FileBackedTaskManager loadFromFile(Path path) {
-        TaskManager manager = new FileBackedTaskManager();
-        try (BufferedReader reader = new BufferedReader(new FileReader(path.toAbsolutePath().toString(), UTF_8))) {
-            String line;
-            boolean isHistory = false;
-            boolean firstStep = true;
+        TaskManager manager = new FileBackedTaskManager(path);
+        if (Files.exists(path)) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(path.toAbsolutePath().toString(), UTF_8))) {
+                String line;
+                boolean isHistory = false;
+                boolean firstStep = true;
 
-            while (reader.ready()) {
-                line = reader.readLine();
+                while (reader.ready()) {
+                    line = reader.readLine();
 
-                if (firstStep) {
-                    firstStep = false;
-                    continue;
-                }
+                    if (firstStep) {
+                        firstStep = false;
+                        continue;
+                    }
 
-                if (line.isBlank() && !firstStep) {
-                    isHistory = true;
-                    continue;
+                    if (line.isBlank() && !firstStep) {
+                        isHistory = true;
+                        continue;
+                    }
+                    if (!isHistory) {
+                        manager.addTask(fromString(line));
+                    } else {
+                        manager.setHistoryFromFile(historyFromString(line));
+                    }
                 }
-                if (!isHistory) {
-                    manager.addTask(fromString(line));
-                } else {
-                    manager.setHistoryFromFile(historyFromString(line));
-                }
+            } catch (IOException | ArrayIndexOutOfBoundsException | ArrayStoreException e) {
+                throw new ManagerLoadException("Файл не удалось считать");
             }
-        } catch (IOException e) {
-            System.out.printf("Во время чтения файла произошла ошибка{}%n", e.getMessage());
+        } else {
+            throw new ManagerLoadException("Файла загрузки не существует");
         }
         return (FileBackedTaskManager) manager;
     }
@@ -94,7 +108,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     public static String historyToString(HistoryManager manager) {
-        return manager.getHistory().stream()
+        List<Task> history = manager.getHistory();
+        return history == null
+                ? ""
+                :history.stream()
+                .filter(Objects::nonNull)
                 .map(t -> new StringBuilder().append(t.getId()))
                 .collect(Collectors.joining(","));
     }
@@ -133,4 +151,15 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
     }
 
+    @Override
+    public void deleteAllTasks() {
+        super.deleteAllTasks();
+        save();
+    }
+
+    @Override
+    public void deleteTaskById(int id) {
+        super.deleteTaskById(id);
+        save();
+    }
 }

@@ -42,15 +42,15 @@ public class Task {
     public Task(String[] arr) {
         this.id = Integer.parseInt(arr[0]);
         this.name = arr[2];
-        this.status = Status.valueOf(arr[3]);
-        this.description = arr[4];
+        this.description = arr[3];
+        this.status = Status.valueOf(arr[4]);
         this.startTime = Instant.parse(arr[5]);
         this.duration = Duration.parse(arr[6]);
     }
 
     // Getters
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -96,6 +96,14 @@ public class Task {
         this.startTime = startTime;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     // Comparison
 
     @Override
@@ -117,8 +125,8 @@ public class Task {
                 .append(id).append(",")
                 .append(this.getClass().getSimpleName()).append(",")
                 .append(name).append(",")
-                .append(status).append(",")
                 .append(description).append(",")
+                .append(status).append(",")
                 .append(startTime).append(",")
                 .append(duration).append(",").toString();
     }
@@ -131,6 +139,7 @@ public class Task {
                 ", description='" + description.length() + '\'' +
                 ", status=" + status +
                 ", startTime=" + startTime +
-                ", duration=" + duration +  "}\n";
+                ", duration=" + duration +
+                ", endTime=" + getEndTime() + "}\n";
     }
 }

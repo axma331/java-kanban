@@ -47,8 +47,12 @@ public class Epic extends Task {
         }
     }
 
-    public void addSubTask(int subTaskId) {
-        this.subTasks.add(subTaskId);
+    public boolean addSubTask(int subTaskId) {
+        if (!subTasks.contains(subTaskId)) {
+            this.subTasks.add(subTaskId);
+            return true;
+        }
+        return false;
     }
 
     public void setEndTime(Instant endTime) {
@@ -57,9 +61,12 @@ public class Epic extends Task {
 
     // Clear subtask
 
-    public void deleteSubTask(int subTask) {
-        if (!this.subTasks.contains(subTask))
+    public boolean deleteSubTask(Integer subTask) {
+        if (this.subTasks.contains(subTask)) {
             this.subTasks.remove(subTask);
+            return true;
+        }
+        return false;
     }
 
     public void clearSubtask() {
@@ -74,7 +81,11 @@ public class Epic extends Task {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Epic epic = (Epic) o;
-        return Objects.equals(subTasks, epic.subTasks);
+        return subTasks.equals(epic.subTasks)
+                && getName().equals(epic.getName())
+                && getDescription().equals(epic.getDescription())
+                && getId().equals(epic.getId())
+                && getStatus().equals(epic.getStatus());
     }
 
     @Override
@@ -91,6 +102,7 @@ public class Epic extends Task {
                 ", status=" + getStatus() +
                 ", subtasks=" + subTasks +
                 ", startTime=" + getStartTime() +
-                ", duration=" + getDuration() + "}\n";
+                ", duration=" + getDuration() +
+                ", endTime=" + getEndTime() + "}\n";
     }
 }

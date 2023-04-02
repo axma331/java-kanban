@@ -2,10 +2,7 @@ package taskTracker.util;
 
 import taskTracker.model.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CustomLinkedList {
     private Node head = null;
@@ -18,10 +15,12 @@ public class CustomLinkedList {
     }
 
     public void add(Task task) {
-        removeNode(searchByHistory.get(task.getId()));
-        Node node = new Node(task);
-        searchByHistory.put(task.getId(), node);
-        linkLast(node);
+        if (Objects.nonNull(task)) {
+            removeNode(searchByHistory.get(task.getId()));
+            Node node = new Node(task);
+            searchByHistory.put(task.getId(), node);
+            linkLast(node);
+        }
     }
 
     public void linkLast(Node node) {

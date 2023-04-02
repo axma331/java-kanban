@@ -47,6 +47,10 @@ public class InMemoryTaskManager implements TaskManager {
         return id != -1 ? id : ++InMemoryTaskManager.id;
     }
 
+    void resetIdGenerator() {
+        id = -1;
+    }
+
     //Add task
 
     /**
