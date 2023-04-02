@@ -1,6 +1,5 @@
 package taskTracker.managers;
 
-import taskTracker.exception.ManagerSaveException;
 import taskTracker.model.Epic;
 import taskTracker.model.Subtask;
 import taskTracker.model.Task;
@@ -8,19 +7,20 @@ import taskTracker.model.Type;
 import taskTracker.util.TaskMapper;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 public class FileBackedTaskManager extends InMemoryTaskManager {
-    private static final String BACKUP = "resources/storage.csv";
+    private static final Path path = Path.of("resources/main/storage.csv");
     private static final String TITLE = "id,type,name,status,description,start_time,duration,epic";
 
     public static void main(String[] args) {
-        try {
-            TaskManager manager = loadFromFile(new File(BACKUP));
+            TaskManager manager = loadFromFile(path);
 
             System.out.println("Part 1: saving tasks");
             {
@@ -33,7 +33,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 manager.addTask(map.mapper(Type.EPIC));
             }
 
-            TaskManager managerT = loadFromFile(new File(BACKUP));
+            TaskManager managerT = loadFromFile(path);
 
             System.out.println("Part 2: loading tasks");
             {
@@ -42,15 +42,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 System.out.println("History:\n" + manager.getHistory());
                 System.out.println("History:\n" + managerT.getHistory());
             }
-
-        } catch (ManagerSaveException e) {
-            e.getMessage();
-        }
     }
 
-    public static FileBackedTaskManager loadFromFile(File file) throws ManagerSaveException {
+    public static FileBackedTaskManager loadFromFile(Path path) {
         TaskManager manager = new FileBackedTaskManager();
-        try (BufferedReader reader = new BufferedReader(new FileReader(file));) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(path.toAbsolutePath().toString(), UTF_8))) {
             String line;
             boolean isHistory = false;
             boolean firstStep = true;
@@ -74,14 +70,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
             }
         } catch (IOException e) {
-            throw new ManagerSaveException("Во время чтения файла произошла ошибка!", e);
+            System.out.printf("Во время чтения файла произошла ошибка{}%n", e.getMessage());
         }
         return (FileBackedTaskManager) manager;
     }
 
     private void save() {
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(BACKUP, StandardCharsets.UTF_8));) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toAbsolutePath().toString(), UTF_8))) {
             writer.write(TITLE);
             writer.newLine();
 
