@@ -35,8 +35,8 @@ public class Task {
         this.description = description;
         this.id = taskId;
         this.status = Status.NEW;
-        this.startTime = startTime;
-        this.duration = duration;
+        this.startTime = Objects.requireNonNullElse(startTime, Instant.MIN);
+        this.duration = Objects.requireNonNullElse(duration, Duration.ZERO);
     }
 
     public Task(String[] arr) {

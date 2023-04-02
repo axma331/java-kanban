@@ -1,0 +1,9 @@
+id,type,name,status,description,start_time,duration,epic
+0,Task,Task_task_0,NEW,Task_description_0,-1000000000-01-01T00:00:00Z,PT0S,
+4,Task,Task_task_1,NEW,Task_description_1,-1000000000-01-01T00:00:00Z,PT0S,
+1,Epic,Epic_task_0,NEW,Epic_description_0,-1000000000-01-01T00:00:00Z,PT0S,
+5,Epic,Epic_task_1,NEW,Epic_description_1,-1000000000-01-01T00:00:00Z,PT0S,
+2,Subtask,Subtask_task_0,NEW,Subtask_description_0,-1000000000-01-01T00:00:00Z,PT0S,5
+3,Subtask,Subtask_task_1,NEW,Subtask_description_1,-1000000000-01-01T00:00:00Z,PT0S,1
+
+0,4,1,5,2,3

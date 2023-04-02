@@ -15,14 +15,26 @@ public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Task> tasks;
     private final HashMap<Integer, Epic> epics;
     private final HashMap<Integer, Subtask> subtasks;
-
     private final InMemoryHistoryManager history;
+    private final Set<Task> tasksTree;
+    private final Map<Instant, Boolean> planningPeriod;
+    private final int PLANNING_PERIOD_MIN = 15;
 
     public InMemoryTaskManager() {
         this.tasks = new HashMap<>();
         this.epics = new HashMap<>();
         this.subtasks = new HashMap<>();
         this.history = new InMemoryHistoryManager();
+        planningPeriod = new HashMap<>();
+        tasksTree = new TreeSet<>((a, b) -> {
+            if (a.getStartTime().isAfter(b.getStartTime())) {
+                return 1;
+            } else if (a.getStartTime().isBefore(b.getStartTime())) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
     }
 
     /**
@@ -46,14 +58,31 @@ public class InMemoryTaskManager implements TaskManager {
     public void addTask(Task preTask) {
         if (Task.class == preTask.getClass()) {
             Task task = new Task(preTask.getName(), preTask.getDescription(), getIdOrNextFreeId(preTask.getId()), preTask.getStartTime(), preTask.getDuration());
+            normalizeDuration(task);
+            normalizeTime(task);
+            if (isBusyPlanningPeriod(task)) {
+                System.out.println("Данный период времени уже занят! Добавить задачу нельзя.");
+                return;
+            }
             tasks.put(task.getId(), task);
+            tasksTree.add(task);
+            addToPlanningPeriod(task);
         } else if (Epic.class == preTask.getClass()) {
             Epic task = new Epic(preTask.getName(), preTask.getDescription(), getIdOrNextFreeId(preTask.getId()), preTask.getStartTime(), preTask.getDuration());
             epics.put(task.getId(), task);
+            tasksTree.add(task);
         } else if (Subtask.class == preTask.getClass()) {
             Subtask task = new Subtask(preTask.getName(), preTask.getDescription(), getIdOrNextFreeId(preTask.getId()), ((Subtask) preTask).getEpicId(), preTask.getStartTime(), preTask.getDuration());
+            normalizeDuration(task);
+            normalizeTime(task);
+            if (isBusyPlanningPeriod(task)) {
+                System.out.println("Данный период времени уже занят! Добавить задачу нельзя.");
+                return;
+            }
             subtasks.put(task.getId(), task);
             updateInfoAboutSubTasks(task.getEpicId());
+            tasksTree.add(task);
+            addToPlanningPeriod(task);
         }
     }
 
@@ -64,12 +93,12 @@ public class InMemoryTaskManager implements TaskManager {
             updatedTask.addSubTasks(getSubTaskIdListByEpicId(epicId));
 
             List<Subtask> subtaskList = getSubTaskListByEpicId(epicId);
-            updatedTask.setDuration(subtaskList.stream().
-                    map(Subtask::getDuration)
+            updatedTask.setDuration(subtaskList.stream()
+                    .map(Subtask::getDuration)
                     .reduce(Duration.ZERO, Duration::plus));
 
             updatedTask.setStartTime(subtaskList.stream().
-                    map(Subtask::getEndTime)
+                    map(Subtask::getStartTime)
                     .reduce(Instant.MAX, (a, b) -> a.isBefore(b) ? a : b));
 
             updatedTask.setEndTime(subtaskList.stream().
@@ -161,6 +190,10 @@ public class InMemoryTaskManager implements TaskManager {
         return list;
     }
 
+    public List<Task> getPrioritizedTasks() {
+        return new ArrayList<>(tasksTree);
+    }
+
     //Delete tasks
 
     @Override
@@ -168,6 +201,8 @@ public class InMemoryTaskManager implements TaskManager {
         tasks.clear();
         epics.clear();
         subtasks.clear();
+        tasksTree.clear();
+        planningPeriod.clear();
         history.clear();
     }
 
@@ -188,15 +223,24 @@ public class InMemoryTaskManager implements TaskManager {
             System.out.println("Задача №" + id + " отсутствует в списке!");
         } else if (epics.containsKey(id)) {
             for (int subtaskId : epics.get(id).getSubTasks()) {
+                tasksTree.remove(subtasks.get(subtaskId));
+                removeFromPlanningPeriod(subtasks.get(subtaskId));
                 subtasks.remove(subtaskId);
                 history.remove(subtaskId);
             }
+            tasksTree.remove(epics.get(id));
+            removeFromPlanningPeriod(epics.get(id));
             epics.remove(id);
+
         } else if (subtasks.containsKey(id)) {
             int epicId = subtasks.get(id).getEpicId();
+            tasksTree.remove(subtasks.get(id));
+            removeFromPlanningPeriod(subtasks.get(id));
             subtasks.remove(id);
             updateInfoAboutSubTasks(epicId);
         } else {
+            tasksTree.remove(tasks.get(id));
+            removeFromPlanningPeriod(tasks.get(id));
             tasks.remove(id);
         }
         history.remove(id);
@@ -282,6 +326,49 @@ public class InMemoryTaskManager implements TaskManager {
             for (Integer id : idList) {
                 history.add(getTaskById(id));
             }
+    }
+    //for time
+
+    private void normalizeDuration(Task task) {
+        if (task.getDuration().toMinutes() % PLANNING_PERIOD_MIN > 0) {
+            task.setDuration(Duration.ofMinutes(
+                    ((task.getDuration().toMinutes() / PLANNING_PERIOD_MIN) + 1 ) * PLANNING_PERIOD_MIN)
+            );
+        }
+    }
+
+    private void normalizeTime(Task task) {
+        int SECOND_IN_MIN = 60;
+        Duration delta = Duration.ofSeconds(
+                task.getStartTime().getEpochSecond() % (PLANNING_PERIOD_MIN * SECOND_IN_MIN)
+        );
+        task.setStartTime(task.getStartTime().minus(delta));
+    }
+
+    private void addToPlanningPeriod(Task task) {
+        for (Instant time = Instant.from(task.getStartTime());
+             time.isBefore(task.getEndTime());
+             time = time.plus(Duration.ofMinutes(PLANNING_PERIOD_MIN))) {
+            planningPeriod.put(time, true);
+        }
+    }
+
+    private void removeFromPlanningPeriod(Task task) {
+        for (Instant time = Instant.from(task.getStartTime());
+             time.isBefore(task.getEndTime());
+             time = time.plus(Duration.ofMinutes(PLANNING_PERIOD_MIN))) {
+            planningPeriod.remove(time);
+        }
+    }
+
+    private boolean isBusyPlanningPeriod(Task task) {
+        for (Instant time = task.getStartTime();
+             time.isBefore(task.getEndTime());
+             time = time.plus(Duration.ofMinutes(PLANNING_PERIOD_MIN))) {
+            if (planningPeriod.containsKey(time)) return true;
+        }
+
+        return false;
     }
 
     //Additional methods
