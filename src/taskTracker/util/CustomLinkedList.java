@@ -68,10 +68,11 @@ public class CustomLinkedList {
     }
 
     public List<Task> getTasks() {
-        Node node = head;
-        if (node == null) return null; //todo стоит ли возвращать null или все же лучше пустой список?
-
         List<Task> list = new ArrayList<>(searchByHistory.size());
+
+        Node node = head;
+        if (node == null) return list;
+
         do {
             list.add(node.getTask());
             node = node.next;

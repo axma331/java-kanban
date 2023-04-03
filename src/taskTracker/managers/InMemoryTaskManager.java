@@ -18,7 +18,7 @@ public class InMemoryTaskManager implements TaskManager {
     private final InMemoryHistoryManager history;
     private final Set<Task> tasksTree;
     private final Map<Instant, Boolean> planningPeriod;
-    private final int PLANNING_PERIOD_MIN = 15;
+    public final int PLANNING_PERIOD_MIN = 15;
 
     public InMemoryTaskManager() {
         this.tasks = new HashMap<>();
@@ -57,16 +57,18 @@ public class InMemoryTaskManager implements TaskManager {
      * Добавление новой задачи в менеджер. При добавление Subtask происходит обновление списка подзадач в Epic.
      *
      * @param preTask задача предварительно созданная для добавления в менеджер.
+     * @return
      */
     @Override
-    public void addTask(Task preTask) {
+    public boolean addTask(Task preTask) {
+        if (preTask == null) return false;
         if (Task.class == preTask.getClass()) {
             Task task = new Task(preTask.getName(), preTask.getDescription(), getIdOrNextFreeId(preTask.getId()), preTask.getStartTime(), preTask.getDuration());
             normalizeDuration(task);
             normalizeTime(task);
             if (isBusyPlanningPeriod(task)) {
                 System.out.println("Данный период времени уже занят! Добавить задачу нельзя.");
-                return;
+                return false;
             }
             tasks.put(task.getId(), task);
             tasksTree.add(task);
@@ -81,16 +83,21 @@ public class InMemoryTaskManager implements TaskManager {
             normalizeTime(task);
             if (isBusyPlanningPeriod(task)) {
                 System.out.println("Данный период времени уже занят! Добавить задачу нельзя.");
-                return;
+                return false;
             }
-            subtasks.put(task.getId(), task);
-            updateInfoAboutSubTasks(task.getEpicId());
-            tasksTree.add(task);
-            addToPlanningPeriod(task);
+                subtasks.put(task.getId(), task);
+            if (updateInfoAboutSubTasks(task.getEpicId())) {
+                tasksTree.add(task);
+                addToPlanningPeriod(task);
+            } else {
+                subtasks.remove(task.getId());
+                return false;
+            }
         }
+        return true;
     }
 
-    private void updateInfoAboutSubTasks(int epicId) {
+    private boolean updateInfoAboutSubTasks(int epicId) {
         if (epics.containsKey(epicId)) {
             Epic task = epics.get(epicId);
             Epic updatedTask = new Epic(task.getName(), task.getDescription(), epicId, task.getStartTime(), task.getDuration());
@@ -112,7 +119,9 @@ public class InMemoryTaskManager implements TaskManager {
             epics.put(task.getId(), updatedTask);
         } else {
             System.out.println("Epic c id №" + epicId + " не существует. Привязка невозможна!");
+            return false;
         }
+        return true;
     }
 
     @Override
@@ -220,11 +229,13 @@ public class InMemoryTaskManager implements TaskManager {
      * В случае отсутствия указанного идентификатора, выводится предупреждение!
      *
      * @param id идентификатор задачи
+     * @return
      */
     @Override
-    public void deleteTaskById(int id) {
+    public boolean deleteTaskById(int id) {
         if (!getIdOfAllTasks().contains(id)) {
             System.out.println("Задача №" + id + " отсутствует в списке!");
+            return false;
         } else if (epics.containsKey(id)) {
             for (int subtaskId : epics.get(id).getSubTasks()) {
                 tasksTree.remove(subtasks.get(subtaskId));
@@ -248,6 +259,7 @@ public class InMemoryTaskManager implements TaskManager {
             tasks.remove(id);
         }
         history.remove(id);
+        return true;
     }
 
     @Override
@@ -262,24 +274,28 @@ public class InMemoryTaskManager implements TaskManager {
     //Update task
 
     @Override
-    public void updateTask(Task oldTask, Status newStatus) {
+    public boolean updateTask(Task oldTask, Status newStatus) {
         if (Task.class == oldTask.getClass()) {
             Task task = new Task(oldTask.getName(), oldTask.getDescription(), oldTask.getId(), oldTask.getStartTime(), oldTask.getDuration());
             task.setStatus(newStatus);
             tasks.put(task.getId(), task);
+
             System.out.println("You changed " + task.getClass().getSimpleName() + "s " +
-                    "status from " + oldTask.getStatus() + " to " + newStatus);
+                    "status from " + oldTask.getStatus() + " to " + tasks.get(task.getId()).getStatus());
         } else if (Subtask.class == oldTask.getClass()) {
             Subtask subtask = new Subtask(oldTask.getName(), oldTask.getDescription(), oldTask.getId(),
                     ((Subtask) oldTask).getEpicId(), oldTask.getStartTime(), oldTask.getDuration());
             subtask.setStatus(newStatus);
             subtasks.put(subtask.getId(), subtask);
             System.out.println("You changed " + subtask.getClass().getSimpleName() + "s " +
-                    "status from " + oldTask.getStatus() + " to " + newStatus);
+                    "status from " + oldTask.getStatus() + " to " + subtasks.get(subtask.getId()).getStatus());
             checkStatusOfEpic(epics.get(subtask.getEpicId()));
         } else if (Epic.class == oldTask.getClass()) {
             checkStatusOfEpic((Epic) oldTask);
+        } else {
+            return false;
         }
+        return true;
     }
 
     @Override

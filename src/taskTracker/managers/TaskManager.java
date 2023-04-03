@@ -11,7 +11,7 @@ import java.util.Set;
 public interface TaskManager {
 
 
-    void addTask(Task preTask);
+    boolean addTask(Task preTask);
 
     List<Integer> getSubTaskIdListByEpicId(int epicId);
 
@@ -29,11 +29,11 @@ public interface TaskManager {
 
     void deleteAllTasks();
 
-    void deleteTaskById(int id);
+    boolean deleteTaskById(int id);
 
     Set<Integer> getIdOfAllTasks();
 
-    void updateTask(Task oldTask, Status newStatus);
+    boolean updateTask(Task oldTask, Status newStatus);
 
     void checkStatusOfEpic(Epic oldTask);
 

@@ -2,6 +2,7 @@ package taskTracker.managers;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import taskTracker.exception.ManagerLoadException;
 import taskTracker.model.Epic;
@@ -22,6 +23,7 @@ class FileBackedTaskManagerTest {
 
     @BeforeEach
     public void beforeEach(){
+        path.toFile().delete();
         fillFile();
         manager = FileBackedTaskManager.loadFromFile(path);
     }
@@ -111,6 +113,7 @@ class FileBackedTaskManagerTest {
                 "Данные загрузки истории не совпадают");
     }
 
+    @Order(1)
     @Test
     void testAddTask() {
         manager = FileBackedTaskManager.loadFromFile(path);
@@ -166,63 +169,49 @@ class FileBackedTaskManagerTest {
     }
 
 //    @Test
-//    void testUpdateTask() {
-//        Task task = new Task("Просто задача", "Описание просто задачи", 1, Status.IN_PROGRESS);
+//    void testUpdateTask() { //todo перезатирается история в файле, надо понять как решить проблему с сохранением во время считывания, т.к. считывая таску оно снова добавляет его в файл
+//        Task task = new Task("Task_task_1", "Task_description_1");
+//        task.setId(4);
 //
-//        manager.updateTask(task);
+//        manager.updateTask(task, Status.IN_PROGRESS);
 //
 //        manager = FileBackedTaskManager.loadFromFile(path);
 //
-//        String[] checkData = {"1,TASK,Просто задача,Описание просто задачи,IN_PROGRESS,PT0S,-1000000000-01-01T00:00:00Z",
-//                "2,EPIC,Важный эпик,Очень важный,NEW,PT0S,-1000000000-01-01T00:00:00Z",
-//                "3,SUBTASK,Подзадача1,Просто подзадача1,NEW,PT0S,-1000000000-01-01T00:00:00Z,2",
-//                "4,SUBTASK,Подзадача2,Просто подзадача2,NEW,PT0S,-1000000000-01-01T00:00:00Z,2"};
+//        String[] checkData = {
+//                "0,Task,Task_task_0,Task_description_0,NEW,-1000000000-01-01T00:00:00Z,PT0S,",
+//                "4,Task,Task_task_1,Task_description_1,IN_PROGRESS,-1000000000-01-01T00:00:00Z,PT0S,",
+//                "1,Epic,Epic_task_0,Epic_description_0,NEW,-1000000000-01-01T00:00:00Z,PT0S,",
+//                "2,Subtask,Subtask_task_0,Subtask_description_0,NEW,-1000000000-01-01T00:00:00Z,PT0S,1",
+//                "3,Subtask,Subtask_task_1,Subtask_description_1,NEW,-1000000000-01-01T00:00:00Z,PT0S,1"
+//        };
 //
-//        Integer[] history = {1, 4, 2};
+//        Integer[] history = {0,4,1,2,3};
 //
-//        assertArrayEquals(manager.getAllTaskList().stream().map(Task::toStringForFile).toArray(),
-//                checkData,
+//        assertArrayEquals(manager.getAllTaskList().stream().map(Task::toStringForFile).toArray(), checkData,
 //                "Данные задач загрузки не совпадают");
 //        assertArrayEquals(manager.getHistory().stream().map(Task::getId).toArray(), history,
 //                "Данные загрузки истории не совпадают");
 //    }
 
-//    @Test
-//    void testUpdateEpic() {
-//        Epic task = new Epic("Просто задача", "Описание просто задачи", 2, Status.IN_PROGRESS);
-//
-//        manager.updateEpic(task);
-//
-//        manager = FileBackedTaskManager.loadFromFile(path);
-//
-//        String[] checkData = {"1,TASK,Обычная задача,Простая задача,NEW,PT0S,-1000000000-01-01T00:00:00Z",
-//                "2,EPIC,Просто задача,Описание просто задачи,NEW,PT0S,-1000000000-01-01T00:00:00Z",
-//                "3,SUBTASK,Подзадача1,Просто подзадача1,NEW,PT0S,-1000000000-01-01T00:00:00Z,2",
-//                "4,SUBTASK,Подзадача2,Просто подзадача2,NEW,PT0S,-1000000000-01-01T00:00:00Z,2"};
-//
-//        Integer[] history = {1, 4, 2};
-//
-//        assertArrayEquals(manager.getAllTaskList().stream().map(Task::toStringForFile).toArray(),
-//                checkData,
-//                "Данные задач загрузки не совпадают");
-//        assertArrayEquals(manager.getHistory().stream().map(Task::getId).toArray(), history,
-//                "Данные загрузки истории не совпадают");
-//    }
 
 //    @Test
 //    void testUpdateSubtask() {
-//        Subtask task = new Subtask("Просто задача", "Описание просто задачи", 4, Status.IN_PROGRESS, 2);
+//        Subtask task = new Subtask("Subtask_task_0", "Subtask_description_0", 1);
+//        task.setId(2);
 //
-//        manager.updateSubtask(task);
+//        manager.updateTask(task, Status.IN_PROGRESS);
 //
 //        manager = FileBackedTaskManager.loadFromFile(path);
 //
-//        String[] checkData = {"1,TASK,Обычная задача,Простая задача,NEW,PT0S,-1000000000-01-01T00:00:00Z",
-//                "2,EPIC,Важный эпик,Очень важный,IN_PROGRESS,PT0S,-1000000000-01-01T00:00:00Z",
-//                "3,SUBTASK,Подзадача1,Просто подзадача1,NEW,PT0S,-1000000000-01-01T00:00:00Z,2",
-//                "4,SUBTASK,Просто задача,Описание просто задачи,IN_PROGRESS,PT0S,-1000000000-01-01T00:00:00Z,2"};
+//        String[] checkData = {
+//                "0,Task,Task_task_0,Task_description_0,NEW,-1000000000-01-01T00:00:00Z,PT0S,",
+//                "4,Task,Task_task_1,Task_description_1,NEW,-1000000000-01-01T00:00:00Z,PT0S,",
+//                "1,Epic,Epic_task_0,Epic_description_0,IN_PROGRESS,-1000000000-01-01T00:00:00Z,PT0S,",
+//                "2,Subtask,Subtask_task_0,Subtask_description_0,IN_PROGRESS,-1000000000-01-01T00:00:00Z,PT0S,1",
+//                "3,Subtask,Subtask_task_1,Subtask_description_1,NEW,-1000000000-01-01T00:00:00Z,PT0S,1"
+//        };
 //
-//        Integer[] history = {1, 4, 2};
+//        Integer[] history = {0,4,1,2,3};
 //
 //        assertArrayEquals(manager.getAllTaskList().stream().map(Task::toStringForFile).toArray(),
 //                checkData,
@@ -230,9 +219,10 @@ class FileBackedTaskManagerTest {
 //        assertArrayEquals(manager.getHistory().stream().map(Task::getId).toArray(), history,
 //                "Данные загрузки истории не совпадают");
 //
-//        Subtask task1 = new Subtask("Просто задача", "Описание просто задачи", 7, Status.IN_PROGRESS, 2);
+//        Subtask task1 = new Subtask("Subtask_task_0", "Subtask_description_0", 1);
+//        task.setId(2);
 //
-//        manager.updateSubtask(task1);
+//        manager.updateTask(task1, Status.DONE);
 //
 //        assertArrayEquals(manager.getAllTaskList().stream().map(Task::toStringForFile).toArray(),
 //                checkData,
@@ -241,30 +231,28 @@ class FileBackedTaskManagerTest {
 //                "Данные загрузки истории не совпадают");
 //    }
 
-//    @Test
-//    void testDeleteAnyTask() {
-//        fillFile();
-//        FileBackedTaskManager manager = FileBackedTaskManager.loadFromFile(path);
-//
-//        manager.deleteAnyTask(2);
-//
-//        FileBackedTaskManager newManager = FileBackedTaskManager.loadFromFile(path);
-//
-//        String[] checkData = {"1,TASK,Обычная задача,Простая задача,NEW,PT0S,-1000000000-01-01T00:00:00Z"};
-//
-//        Integer[] history = {1};
-//
-//        assertArrayEquals(newManager.getAllTaskList().stream().map(Task::toStringForFile).toArray(),
-//                checkData,
-//                "Данные задач загрузки не совпадают");
-//        assertArrayEquals(newManager.getHistory().stream().map(Task::getId).toArray(), history,
-//                "Данные загрузки истории не совпадают");
-//    }
+    @Test
+    void testDeleteAnyTask() {
 
+        manager.deleteTaskById(4);
+        manager.deleteTaskById(2);
 
+        FileBackedTaskManager newManager = FileBackedTaskManager.loadFromFile(path);
 
+        String[] checkData = {
+                "0,Task,Task_task_0,Task_description_0,NEW,-1000000000-01-01T00:00:00Z,PT0S,",
+                "1,Epic,Epic_task_0,Epic_description_0,NEW,-1000000000-01-01T00:00:00Z,PT0S,",
+                "3,Subtask,Subtask_task_1,Subtask_description_1,NEW,-1000000000-01-01T00:00:00Z,PT0S,1"
+        };
 
+        Integer[] history = {0,1,3};
 
+        assertArrayEquals(newManager.getAllTaskList().stream().map(Task::toStringForFile).toArray(),
+                checkData,
+                "Данные задач загрузки не совпадают");
+        assertArrayEquals(newManager.getHistory().stream().map(Task::getId).toArray(), history,
+                "Данные загрузки истории не совпадают");
+    }
 
 
     private void fillFile(){

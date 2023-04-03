@@ -1,10 +1,8 @@
 package taskTracker.managers;
 
 import taskTracker.exception.ManagerLoadException;
-import taskTracker.model.Epic;
-import taskTracker.model.Subtask;
-import taskTracker.model.Task;
-import taskTracker.model.Type;
+import taskTracker.exception.ManagerSaveException;
+import taskTracker.model.*;
 import taskTracker.util.TaskMapper;
 
 import java.io.*;
@@ -90,7 +88,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     private void save() {
-
+        if (!Files.exists(path)) {
+            try {
+                Files.createFile(path);
+            } catch (IOException e) {
+                throw new ManagerSaveException("Не удалось создать файл");
+            }
+        }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toAbsolutePath().toString(), UTF_8))) {
             writer.write(TITLE);
             writer.newLine();
@@ -146,9 +150,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void addTask(Task task) {
+    public boolean addTask(Task task) {
         super.addTask(task);
         save();
+        return false;
+    }
+
+    @Override
+    public boolean updateTask(Task oldTask, Status newStatus) {
+        super.updateTask(oldTask, newStatus);
+        return false;
     }
 
     @Override
@@ -158,8 +169,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void deleteTaskById(int id) {
+    public boolean deleteTaskById(int id) {
         super.deleteTaskById(id);
         save();
+        return false;
     }
 }

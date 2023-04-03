@@ -48,6 +48,15 @@ public class Task {
         this.duration = Duration.parse(arr[6]);
     }
 
+    public Task(Task task) {
+        this.id = task.id;
+        this.name = task.name;
+        this.description = task.description;
+        this.status = task.status;
+        this.startTime = task.startTime;
+        this.duration = task.duration;
+    }
+
     // Getters
 
     public Integer getId() {
