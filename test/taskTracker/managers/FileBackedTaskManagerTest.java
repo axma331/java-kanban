@@ -2,7 +2,6 @@ package taskTracker.managers;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import taskTracker.exception.ManagerLoadException;
 import taskTracker.model.Epic;
@@ -19,11 +18,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FileBackedTaskManagerTest {
     private final Path path = Path.of("resources/test/storageForCheck.csv");
-       private FileBackedTaskManager manager;
+    private FileBackedTaskManager manager;
 
     @BeforeEach
-    public void beforeEach(){
-        path.toFile().delete();
+    public void beforeEach() {
         fillFile();
         manager = FileBackedTaskManager.loadFromFile(path);
     }
@@ -31,6 +29,7 @@ class FileBackedTaskManagerTest {
     @AfterEach
     private void afterEach() {
         manager.resetIdGenerator();
+        path.toFile().delete();
     }
 
     @Test
@@ -59,7 +58,7 @@ class FileBackedTaskManagerTest {
                 "3,Subtask,Subtask_task_1,Subtask_description_1,NEW,-1000000000-01-01T00:00:00Z,PT0S,1"
         };
 
-        Integer[] history = {0,4,1,2,3};
+        Integer[] history = {0, 4, 1, 2, 3};
         Object[] array = manager.getAllTaskList().stream().map(Task::toStringForFile).toArray();
         assertArrayEquals(array, checkData,
                 "Данные задач загрузки не совпадают");
@@ -105,7 +104,7 @@ class FileBackedTaskManagerTest {
                 "3,Subtask,Subtask_task_1,Subtask_description_1,NEW,-1000000000-01-01T00:00:00Z,PT0S,1"
         };
 
-        Integer[] history = {0,4,1,2,3};
+        Integer[] history = {0, 4, 1, 2, 3};
 
         assertArrayEquals(manager.getAllTaskList().stream().map(Task::toStringForFile).toArray(), checkData,
                 "Данные задач загрузки не совпадают");
@@ -113,13 +112,11 @@ class FileBackedTaskManagerTest {
                 "Данные загрузки истории не совпадают");
     }
 
-    @Order(1)
     @Test
     void testAddTask() {
         manager = FileBackedTaskManager.loadFromFile(path);
 
         Task task = new Task("Task_task_3", "Task_description_3");
-
         manager.addTask(task);
 
         manager = FileBackedTaskManager.loadFromFile(path);
@@ -133,7 +130,7 @@ class FileBackedTaskManagerTest {
                 "3,Subtask,Subtask_task_1,Subtask_description_1,NEW,-1000000000-01-01T00:00:00Z,PT0S,1"
         };
 
-        Integer[] history = {0,4,5,1,2,3};
+        Integer[] history = {0, 4, 5, 1, 2, 3};
 
         assertArrayEquals(manager.getAllTaskList().stream().map(Task::toStringForFile).toArray(), checkData,
                 "Данные задач загрузки не совпадают");
@@ -160,7 +157,7 @@ class FileBackedTaskManagerTest {
                 "5,Subtask,Subtask_task_2,Subtask_description_2,NEW,-1000000000-01-01T00:00:00Z,PT0S,1"
         };
 
-        Integer[] history = {0,4,1,2,3,5};
+        Integer[] history = {0, 4, 1, 2, 3, 5};
 
         assertArrayEquals(manager.getAllTaskList().stream().map(Task::toStringForFile).toArray(), checkData,
                 "Данные задач загрузки не совпадают");
@@ -169,7 +166,7 @@ class FileBackedTaskManagerTest {
     }
 
 //    @Test
-//    void testUpdateTask() { //todo перезатирается история в файле, надо понять как решить проблему с сохранением во время считывания, т.к. считывая таску оно снова добавляет его в файл
+//    void testUpdateTask() { //todo перезатирается история в файле, надо понять как решить проблему с сохранением во время считывания, т.к. считывая таску оно снова добавляет его в файл. А так все работает
 //        Task task = new Task("Task_task_1", "Task_description_1");
 //        task.setId(4);
 //
@@ -245,7 +242,7 @@ class FileBackedTaskManagerTest {
                 "3,Subtask,Subtask_task_1,Subtask_description_1,NEW,-1000000000-01-01T00:00:00Z,PT0S,1"
         };
 
-        Integer[] history = {0,1,3};
+        Integer[] history = {0, 1, 3};
 
         assertArrayEquals(newManager.getAllTaskList().stream().map(Task::toStringForFile).toArray(),
                 checkData,
@@ -255,7 +252,7 @@ class FileBackedTaskManagerTest {
     }
 
 
-    private void fillFile(){
+    private void fillFile() {
         if (!Files.exists(path)) {
             try {
                 Files.createFile(path);
