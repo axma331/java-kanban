@@ -1,6 +1,7 @@
 package taskTracker.model;
 
 public enum Type {
+
     TASK("Task"),
     EPIC("Epic"),
     SUBTASK("Subtask");
@@ -14,6 +15,5 @@ public enum Type {
     public String getValue() {
         return value;
     }
-
 
 }

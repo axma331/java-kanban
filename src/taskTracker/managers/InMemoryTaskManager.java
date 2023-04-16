@@ -101,7 +101,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (epics.containsKey(epicId)) {
             Epic task = epics.get(epicId);
             Epic updatedTask = new Epic(task.getName(), task.getDescription(), epicId, task.getStartTime(), task.getDuration());
-            updatedTask.addSubTasks(getSubTaskIdListByEpicId(epicId));
+            updatedTask.addSubTasksId(getSubTaskIdListByEpicId(epicId));
 
             List<Subtask> subtaskList = getSubTaskListByEpicId(epicId);
             updatedTask.setDuration(subtaskList.stream()
@@ -321,7 +321,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     private void updateStatusOfEpic(Epic oldTask, Status newStatus) {
         Epic epic = new Epic(oldTask.getName(), oldTask.getDescription(), oldTask.getId(), oldTask.getStartTime(), oldTask.getDuration());
-        epic.addSubTasks(oldTask.getSubTasks());
+        epic.addSubTasksId(oldTask.getSubTasks());
         epic.setStatus(newStatus);
         tasks.put(epic.getId(), epic);
         System.out.println("You changed " + epic.getClass().getSimpleName() + "s " +
@@ -396,8 +396,8 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public String toString() {
         return "TasksManager:\n" +
-                tasks + '\n' +
-                epics + '\n' +
-                subtasks;
+                tasks.values().stream().map(Objects::toString).collect(Collectors.joining("\n")) + '\n' +
+                epics.values().stream().map(Objects::toString).collect(Collectors.joining("\n")) + '\n' +
+                subtasks.values().stream().map(Objects::toString).collect(Collectors.joining("\n")) + '\n';
     }
 }

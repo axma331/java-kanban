@@ -56,13 +56,13 @@ class EpicTest {
         epic.addSubTask(subtask2.getId());
 
         int id = subtask2.getId();
-        epic.deleteSubTask(id);
+        epic.deleteSubtask(id);
 
         List<Integer> subtasks = new ArrayList<>();
         subtasks.add(subtask1.getId());
 
         assertArrayEquals(epic.getSubTasks().toArray(), subtasks.toArray(), "Список подзадач отличается");
-        assertFalse(epic.deleteSubTask(1), "Ошибка при удалении не существующей подзадачи");
+        assertFalse(epic.deleteSubtask(1), "Ошибка при удалении не существующей подзадачи");
     }
 
     @Test

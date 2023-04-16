@@ -49,19 +49,13 @@ public class Subtask extends Task {
     }
 
     @Override
-    public String toStringForFile() {
-        return super.toStringForFile() + epicId;
+    public String toSaveString() {
+        return super.toSaveString() + epicId;
     }
 
     public String toString() {
-        return '{' + this.getClass().getSimpleName() +
-                "id=" + getId() +
-                ", name='" + getName() +
-                ", description='" + getDescription().length() +
-                ", status=" + getStatus() +
+        return super.toString().substring(0, super.toString().length() - 1) +
                 ", epicId=" + epicId +
-                ", startTime=" + getStartTime() +
-                ", duration=" + getDuration() +
-                ", endTime=" + getEndTime() + "}\n";
+                "}";
     }
 }

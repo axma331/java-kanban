@@ -7,6 +7,7 @@ import taskTracker.model.Type;
 import taskTracker.util.TaskMapper;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -35,31 +36,31 @@ public class Main {
         System.out.println("Part 2: check get method");
         {
             {
-                System.out.println("History is Empty:\n" + manager.getHistory());
-                System.out.println("Task list:\n" + manager.getTaskList());
-                System.out.println("History contains Tasks:\n" + manager.getHistory());
-                System.out.println("Epic list:\n" + manager.getEpicList());
-                System.out.println("History contains Tasks and Epics:\n" + manager.getHistory());
-                System.out.println("Subtask list:\n" + manager.getSubtaskList());
-                System.out.println("History contains Tasks, Epics and Subtask:\n" + manager.getHistory());
+                System.out.println("History is Empty:\n" + manager.getHistory().stream().map(Object::toString).collect(Collectors.joining("\n")));
+                System.out.println("Task list:\n" + manager.getTaskList().stream().map(Object::toString).collect(Collectors.joining("\n")));
+                System.out.println("History contains Tasks:\n" + manager.getHistory().stream().map(Object::toString).collect(Collectors.joining("\n")));
+                System.out.println("Epic list:\n" + manager.getEpicList().stream().map(Object::toString).collect(Collectors.joining("\n")));
+                System.out.println("History contains Tasks and Epics:\n" + manager.getHistory().stream().map(Object::toString).collect(Collectors.joining("\n")));
+                System.out.println("Subtask list:\n" + manager.getSubtaskList().stream().map(Object::toString).collect(Collectors.joining("\n")));
+                System.out.println("History contains Tasks, Epics and Subtask:\n" + manager.getHistory().stream().map(Object::toString).collect(Collectors.joining("\n")));
             }
             {
                 manager.clearHistory();
-                System.out.println("History clear: " + manager.getHistory());
-                System.out.println("Get all tasks:\n" + manager.getAllTaskList());
-                System.out.println("History by all tasks:\n" + manager.getHistory());
+                System.out.println("History clear: " + manager.getHistory().stream().map(Object::toString).collect(Collectors.joining("\n")));
+                System.out.println("Get all tasks:\n" + manager.getAllTaskList().stream().map(Object::toString).collect(Collectors.joining("\n")));
+                System.out.println("History by all tasks:\n" + manager.getHistory().stream().map(Object::toString).collect(Collectors.joining("\n")));
             }
             {
                 System.out.println("Get task with id 1:\n" + manager.getTaskById(1));
                 System.out.println("Get task with id 6:\n" + manager.getTaskById(6));
-                System.out.println("History:\n" + manager.getHistory());
+                System.out.println("History:\n" + manager.getHistory().stream().map(Object::toString).collect(Collectors.joining("\n")));
                 System.out.println("Get id of all tasks: " + manager.getIdOfAllTasks());
-                System.out.println("History:\n" + manager.getHistory());
+                System.out.println("History:\n" + manager.getHistory().stream().map(Object::toString).collect(Collectors.joining("\n")));
             }
             {
-                System.out.println("SubTaskList 1:\n" + manager.getSubTaskListByEpicId(map.randomTaskId(Type.EPIC)));
-                System.out.println("SubTaskList 2:\n" + manager.getSubTaskListByEpicId(map.randomTaskId(Type.EPIC)));
-                System.out.println("History:\n" + manager.getHistory());
+                System.out.println("SubTaskList 1:\n" + manager.getSubTaskListByEpicId(map.randomTaskId(Type.EPIC)).stream().map(Object::toString).collect(Collectors.joining("\n")));
+                System.out.println("SubTaskList 2:\n" + manager.getSubTaskListByEpicId(map.randomTaskId(Type.EPIC)).stream().map(Object::toString).collect(Collectors.joining("\n")));
+                System.out.println("History:\n" + manager.getHistory().stream().map(Object::toString).collect(Collectors.joining("\n")));
                 System.out.println(manager);
             }
         }
@@ -83,7 +84,7 @@ public class Main {
             }
 
             System.out.println(manager);
-            System.out.println("History:\n" + manager.getHistory());
+            System.out.println("History:\n" + manager.getHistory().stream().map(Object::toString).collect(Collectors.joining("\n")));
         }
         System.out.println("Part 4: check update of task data ");
         {
@@ -109,11 +110,11 @@ public class Main {
                 int epicId = manager.getEpicIdBySubtaskId(randomId);
                 System.out.println("Task id=" + randomId + "\n" + taskById.getClass().getSimpleName() + " " + taskById);
                 System.out.println("Epic " + manager.getTaskById(epicId));
-                System.out.println(manager.getSubTaskListByEpicId(epicId));
+                System.out.println(manager.getSubTaskListByEpicId(epicId).stream().map(Object::toString).collect(Collectors.joining("\n")));
                 manager.updateTask(taskById, Status.IN_PROGRESS);
                 System.out.println(taskById.getClass().getSimpleName() + " " + manager.getTaskById(randomId));
                 System.out.println(manager.getTaskById(epicId));
-                System.out.println(manager.getSubTaskListByEpicId(epicId));
+                System.out.println(manager.getSubTaskListByEpicId(epicId).stream().map(Object::toString).collect(Collectors.joining("\n")));
             }
             System.out.println("4.3 Check epic: in progress");
             {
@@ -122,11 +123,11 @@ public class Main {
                 int epicId = manager.getEpicIdBySubtaskId(randomId);
                 System.out.println("Task id=" + randomId + "\n" + taskById.getClass().getSimpleName() + " " + taskById);
                 System.out.println("Epic " + manager.getTaskById(epicId));
-                System.out.println(manager.getSubTaskListByEpicId(epicId));
+                System.out.println(manager.getSubTaskListByEpicId(epicId).stream().map(Object::toString).collect(Collectors.joining("\n")));
                 manager.updateTask(taskById, Status.DONE);
                 System.out.println(taskById.getClass().getSimpleName() + " " + manager.getTaskById(randomId));
                 System.out.println(manager.getTaskById(epicId));
-                System.out.println(manager.getSubTaskListByEpicId(epicId));
+                System.out.println(manager.getSubTaskListByEpicId(epicId).stream().map(Object::toString).collect(Collectors.joining("\n")));
             }
             System.out.println("4.4 Check epic: done");
             {
@@ -137,7 +138,7 @@ public class Main {
                 System.out.println(subtasks);
                 subtasks.forEach(x -> manager.updateTask(x, Status.DONE));
                 System.out.println(taskById.getClass().getSimpleName() + " " + manager.getTaskById(randomId));
-                System.out.println(manager.getSubTaskListByEpicId(randomId));
+                System.out.println(manager.getSubTaskListByEpicId(randomId).stream().map(Object::toString).collect(Collectors.joining("\n")));
             }
         }
     }

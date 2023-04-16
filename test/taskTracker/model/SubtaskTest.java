@@ -62,7 +62,7 @@ class SubtaskTest {
         Subtask subtask1 = new Subtask("name_subtask1", "description_subtask1", 1);
 
         assertEquals(
-                subtask1.toStringForFile(),
+                subtask1.toSaveString(),
                 "-1,Subtask,name_subtask1,description_subtask1,NEW,-1000000000-01-01T00:00:00Z,PT0S,1",
                 "toSaveString() не совпадает");
     }

@@ -100,7 +100,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             writer.newLine();
 
             for (Task task : getAllTaskList()) {
-                writer.write(task.toStringForFile());
+                writer.write(task.toSaveString());
                 writer.newLine();
             }
 
