@@ -125,8 +125,12 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task other = (Task) o;
-        return id == other.id && Objects.equals(name, other.name) && Objects.equals(description, other.description)
-                && status == other.status && startTime.equals(other.startTime) && duration.equals(other.duration);
+        return id == other.id
+                && Objects.equals(name, other.name)
+                && Objects.equals(description, other.description)
+                && status == other.status
+                && Objects.equals(startTime, other.startTime)
+                && Objects.equals(duration, other.duration);
     }
 
     @Override

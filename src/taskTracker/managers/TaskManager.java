@@ -8,43 +8,49 @@ import taskTracker.model.Task;
 import java.util.List;
 import java.util.Set;
 
+
 public interface TaskManager {
-
-
-    boolean addTask(Task preTask);
-
-    List<Integer> getSubTaskIdListByEpicId(int epicId);
-
-    List<Subtask> getSubTaskListByEpicId(int epicId);
 
     Task getTaskById(int taskId);
 
-    List<Task> getTaskList();
+    List<Task> getTasks();
 
-    List<Epic> getEpicList();
+    List<Epic> getEpics();
 
-    List<Subtask> getSubtaskList();
+    List<Subtask> getSubtasks();
 
-    List<Task> getAllTaskList();
+    List<Task> getAllTasks();
 
-    void deleteAllTasks();
 
-    boolean deleteTaskById(int id);
+    List<Subtask> getEpicSubtasks(int epicId);
+
+    List<Integer> getEpicSubtasksList(int epicId);
 
     Set<Integer> getIdOfAllTasks();
+
+    int getEpicIdBySubtaskId(int id);
+
+
+    boolean addTask(Task preTask);
 
     boolean updateTask(Task oldTask, Status newStatus);
 
     void checkStatusOfEpic(Epic oldTask);
 
+
+    boolean deleteTaskById(int id);
+
+    void deleteAllTasks();
+
+
     List<Task> getHistory();
-
-    void clearHistory();
-
-    int getEpicIdBySubtaskId(int id);
 
     void setHistoryFromFile(List<Integer> idList);
 
+    void clearHistory();
+
+
     List<Task> getPrioritizedTasks();
+
 }
 

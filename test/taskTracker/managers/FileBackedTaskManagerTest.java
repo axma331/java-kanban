@@ -59,7 +59,7 @@ class FileBackedTaskManagerTest {
         };
 
         Integer[] history = {0, 4, 1, 2, 3};
-        Object[] array = manager.getAllTaskList().stream().map(Task::toSaveString).toArray();
+        Object[] array = manager.getAllTasks().stream().map(Task::toSaveString).toArray();
         assertArrayEquals(array, checkData,
                 "Данные задач загрузки не совпадают");
         assertArrayEquals(manager.getHistory().stream().map(Task::getId).toArray(), history,
@@ -106,7 +106,7 @@ class FileBackedTaskManagerTest {
 
         Integer[] history = {0, 4, 1, 2, 3};
 
-        assertArrayEquals(manager.getAllTaskList().stream().map(Task::toSaveString).toArray(), checkData,
+        assertArrayEquals(manager.getAllTasks().stream().map(Task::toSaveString).toArray(), checkData,
                 "Данные задач загрузки не совпадают");
         assertArrayEquals(manager.getHistory().stream().map(Task::getId).toArray(), history,
                 "Данные загрузки истории не совпадают");
@@ -132,7 +132,7 @@ class FileBackedTaskManagerTest {
 
         Integer[] history = {0, 4, 5, 1, 2, 3};
 
-        assertArrayEquals(manager.getAllTaskList().stream().map(Task::toSaveString).toArray(), checkData,
+        assertArrayEquals(manager.getAllTasks().stream().map(Task::toSaveString).toArray(), checkData,
                 "Данные задач загрузки не совпадают");
         assertArrayEquals(manager.getHistory().stream().map(Task::getId).toArray(), history,
                 "Данные загрузки истории не совпадают");
@@ -159,7 +159,7 @@ class FileBackedTaskManagerTest {
 
         Integer[] history = {0, 4, 1, 2, 3, 5};
 
-        assertArrayEquals(manager.getAllTaskList().stream().map(Task::toSaveString).toArray(), checkData,
+        assertArrayEquals(manager.getAllTasks().stream().map(Task::toSaveString).toArray(), checkData,
                 "Данные задач загрузки не совпадают");
         assertArrayEquals(manager.getHistory().stream().map(Task::getId).toArray(), history,
                 "Данные загрузки истории не совпадают");
@@ -244,7 +244,7 @@ class FileBackedTaskManagerTest {
 
         Integer[] history = {0, 1, 3};
 
-        assertArrayEquals(newManager.getAllTaskList().stream().map(Task::toSaveString).toArray(),
+        assertArrayEquals(newManager.getAllTasks().stream().map(Task::toSaveString).toArray(),
                 checkData,
                 "Данные задач загрузки не совпадают");
         assertArrayEquals(newManager.getHistory().stream().map(Task::getId).toArray(), history,

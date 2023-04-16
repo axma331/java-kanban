@@ -35,7 +35,7 @@ class InMemoryTaskManagerTest {
         Task task = new Task("name_task", "description_task");
         task.setId(4);
 
-        assertArrayEquals(taskManager.getAllTaskList().toArray(), new Task[0],
+        assertArrayEquals(taskManager.getAllTasks().toArray(), new Task[0],
                 "Некорректный пустой список");
 
         taskManager.addTask(epic);
@@ -47,19 +47,19 @@ class InMemoryTaskManagerTest {
         list.add(epic);
         list.add(subtask1);
 
-        assertArrayEquals(taskManager.getAllTaskList().toArray(), list.toArray(new Task[0]),
+        assertArrayEquals(taskManager.getAllTasks().toArray(), list.toArray(new Task[0]),
                 "Некорректный список из 1 задачи, 1 эпика, 1 подзадачи");
 
         taskManager.addTask(subtask2);
         epic.addSubTask(3);
         list.add(subtask2);
 
-        assertArrayEquals(taskManager.getAllTaskList().toArray(), list.toArray(new Task[0]),
+        assertArrayEquals(taskManager.getAllTasks().toArray(), list.toArray(new Task[0]),
                 "Некорректный список из 1 задачи, 1 эпика, 2 подзадач");
 
         taskManager.deleteAllTasks();
 
-        assertArrayEquals(taskManager.getAllTaskList().toArray(), new Task[0],
+        assertArrayEquals(taskManager.getAllTasks().toArray(), new Task[0],
                 "Некорректный список после удаления всех задач");
     }
 
@@ -188,7 +188,7 @@ class InMemoryTaskManagerTest {
 
         taskManager.deleteTaskById(1);
 
-        assertArrayEquals(taskManager.getAllTaskList().toArray(), new Task[0],
+        assertArrayEquals(taskManager.getAllTasks().toArray(), new Task[0],
                 "При удалении простой задачи список не пуст");
 
     }
@@ -209,7 +209,7 @@ class InMemoryTaskManagerTest {
 
         taskManager.addTask(epic);
 
-        assertArrayEquals(taskManager.getSubTaskListByEpicId(0).toArray(), new Task[0],
+        assertArrayEquals(taskManager.getEpicSubtasks(0).toArray(), new Task[0],
                 "Ошибка при получении списка подзадач у эпика без подзадач");
 
     }

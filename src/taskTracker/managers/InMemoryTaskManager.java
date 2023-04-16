@@ -101,9 +101,9 @@ public class InMemoryTaskManager implements TaskManager {
         if (epics.containsKey(epicId)) {
             Epic task = epics.get(epicId);
             Epic updatedTask = new Epic(task.getName(), task.getDescription(), epicId, task.getStartTime(), task.getDuration());
-            updatedTask.addSubTasksId(getSubTaskIdListByEpicId(epicId));
+            updatedTask.addSubTasksId(getEpicSubtasksList(epicId));
 
-            List<Subtask> subtaskList = getSubTaskListByEpicId(epicId);
+            List<Subtask> subtaskList = getEpicSubtasks(epicId);
             updatedTask.setDuration(subtaskList.stream()
                     .map(Subtask::getDuration)
                     .reduce(Duration.ZERO, Duration::plus));
@@ -125,7 +125,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public List<Integer> getSubTaskIdListByEpicId(int epicId) {
+    public List<Integer> getEpicSubtasksList(int epicId) {
         List<Subtask> subtaskList = subtasks.values().stream()
                 .filter(x -> x.getEpicId() == epicId)
                 .collect(Collectors.toList());
@@ -133,7 +133,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public List<Subtask> getSubTaskListByEpicId(int epicId) {
+    public List<Subtask> getEpicSubtasks(int epicId) {
         List<Subtask> subtaskList = subtasks.values().stream()
                 .filter(x -> x.getEpicId() == epicId)
                 .collect(Collectors.toList());
@@ -178,28 +178,28 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public List<Task> getTaskList() {
+    public List<Task> getTasks() {
         tasks.values().forEach(history::add);
         return new ArrayList<>(tasks.values());
     }
 
     @Override
-    public List<Epic> getEpicList() {
+    public List<Epic> getEpics() {
         epics.values().forEach(history::add);
         return new ArrayList<>(epics.values());
     }
 
     @Override
-    public List<Subtask> getSubtaskList() {
+    public List<Subtask> getSubtasks() {
         subtasks.values().forEach(history::add);
         return new ArrayList<>(subtasks.values());
     }
 
     @Override
-    public List<Task> getAllTaskList() {
-        List<Task> list = getTaskList();
-        list.addAll(getEpicList());
-        list.addAll(getSubtaskList());
+    public List<Task> getAllTasks() {
+        List<Task> list = getTasks();
+        list.addAll(getEpics());
+        list.addAll(getSubtasks());
         return list;
     }
 

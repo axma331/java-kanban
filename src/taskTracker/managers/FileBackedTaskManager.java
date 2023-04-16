@@ -99,7 +99,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             writer.write(TITLE);
             writer.newLine();
 
-            for (Task task : getAllTaskList()) {
+            for (Task task : getAllTasks()) {
                 writer.write(task.toSaveString());
                 writer.newLine();
             }
